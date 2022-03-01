@@ -45,7 +45,61 @@ export function foreach<T>(ls: T[], f: (e: T) => string, sign: string = "\n", au
 	return line
 }
 
-export class Cond {	protected lines: string[] = []	protected finished: boolean = false	if(cond: boolean, call: () => string) {		if (this.finished) {			return		}		if (cond) {			this.finished = true			let str = call()			this.lines.push(str)		}		return this	} 	elseif(cond: boolean, call: () => string) {		if (this.finished) {			return		}		if (cond) {			this.finished = true			let str = call()			this.lines.push(str)		}		return this	} 	else(call: () => string) {		if (this.finished) {			return		}		this.finished = true		let str = call()		this.lines.push(str)		return this	} 	toString() {		return this.lines.map(l => {			if (l.startsWith("\n")) {				l = l.substring(1)			}			if (l.endsWith("\n")) {				l = l.substring(0, l.length - 1)			}			return l		}).join("")	}} export function iff(cond: boolean, call: () => string): Condexport function iff(cond: any, call: () => string): Condexport function iff(cond: boolean, call: () => string) {	return new Cond().if(cond, call)}
+export class Cond {
+	protected lines: string[] = []
+	protected finished: boolean = false
+	iff(cond: boolean, call: () => string) {
+		if (this.finished) {
+			return
+		}
+		if (cond) {
+			this.finished = true
+			let str = call()
+			this.lines.push(str)
+		}
+		return this
+	}
+
+	elseif(cond: boolean, call: () => string) {
+		if (this.finished) {
+			return
+		}
+		if (cond) {
+			this.finished = true
+			let str = call()
+			this.lines.push(str)
+		}
+		return this
+	}
+
+	else(call: () => string) {
+		if (this.finished) {
+			return
+		}
+		this.finished = true
+		let str = call()
+		this.lines.push(str)
+		return this
+	}
+
+	toString() {
+		return this.lines.map(l => {
+			if (l.startsWith("\n")) {
+				l = l.substring(1)
+			}
+			if (l.endsWith("\n")) {
+				l = l.substring(0, l.length - 1)
+			}
+			return l
+		}).join("")
+	}
+}
+
+export function iff(cond: boolean, call: () => string): Cond
+export function iff(cond: any, call: () => string): Cond
+export function iff(cond: boolean, call: () => string) {
+	return new Cond().iff(cond, call)
+}
 
 /**
  * 首字母大写

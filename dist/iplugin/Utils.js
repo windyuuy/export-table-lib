@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.clearSpace = exports.makeFirstLetterLower = exports.makeFirstLetterUpper = exports.foreach = exports.st = exports.cmm = exports.stdtemp = void 0;
+exports.clearSpace = exports.makeFirstLetterLower = exports.makeFirstLetterUpper = exports.iff = exports.Cond = exports.foreach = exports.st = exports.cmm = exports.stdtemp = void 0;
 /**
  * 标准模板文本
  * @param s
@@ -49,6 +49,57 @@ function foreach(ls, f, sign = "\n", autoTrim = true) {
     return line;
 }
 exports.foreach = foreach;
+class Cond {
+    lines = [];
+    finished = false;
+    if(cond, call) {
+        if (this.finished) {
+            return;
+        }
+        if (cond) {
+            this.finished = true;
+            let str = call();
+            this.lines.push(str);
+        }
+        return this;
+    }
+    elseif(cond, call) {
+        if (this.finished) {
+            return;
+        }
+        if (cond) {
+            this.finished = true;
+            let str = call();
+            this.lines.push(str);
+        }
+        return this;
+    }
+    else(call) {
+        if (this.finished) {
+            return;
+        }
+        this.finished = true;
+        let str = call();
+        this.lines.push(str);
+        return this;
+    }
+    toString() {
+        return this.lines.map(l => {
+            if (l.startsWith("\n")) {
+                l = l.substring(1);
+            }
+            if (l.endsWith("\n")) {
+                l = l.substring(0, l.length - 1);
+            }
+            return l;
+        }).join("");
+    }
+}
+exports.Cond = Cond;
+function iff(cond, call) {
+    return new Cond().if(cond, call);
+}
+exports.iff = iff;
 /**
  * 首字母大写
  * @param str
