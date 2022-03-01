@@ -48,12 +48,12 @@ function tryImport(str) {
 async function handler(argv) {
     let from = argv.from;
     let toRoot = argv.to;
-    let tags = argv.tag;
+    let tags = argv.tags;
     let inject = argv.inject || [];
     let packagename = argv.packagename;
     let tableNameFirstLetterUpper = argv.tableNameFirstLetterUpper;
-    let libs = argv.lib || [];
-    let scenes = argv.scene || [];
+    let libs = argv.libs || [];
+    let scenes = argv.scenes || [];
     let injectMap = {};
     for (let k of inject) {
         injectMap[k] = true;

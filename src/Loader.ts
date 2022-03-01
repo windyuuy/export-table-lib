@@ -3,7 +3,7 @@ import * as yargs from "yargs"
 import * as exportCmd from "./commands/export"
 import { tokitHelper } from "./tokithelper";
 
-export function launchWithCmdOptions() {
+export async function launchWithCmdOptions() {
 
 	if (tokitHelper.launchOptions) {
 		const curdir = `${tokitHelper.projectDir}`
@@ -14,7 +14,7 @@ export function launchWithCmdOptions() {
 			argv.alls = argv.alls.split(" ")
 			argv.allnames = argv.allnames.split(" ")
 			argv.inject = argv.inject.split(" ")
-			exportCmd.handler(argv);
+			await exportCmd.handler(argv);
 		}
 	} else {
 		yargs

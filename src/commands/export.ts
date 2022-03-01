@@ -51,12 +51,12 @@ function tryImport<T>(str: string): T | symbol {
 export async function handler(argv: any) {
     let from: string = argv.from;
     let toRoot: string = argv.to;
-    let tags: string[] | undefined = argv.tag;
+    let tags: string[] | undefined = argv.tags;
     let inject: string[] = argv.inject || [];
     let packagename: string | undefined = argv.packagename;
     let tableNameFirstLetterUpper: boolean | false = argv.tableNameFirstLetterUpper;
-    let libs: string[] = argv.lib || []
-    let scenes: string[] = argv.scene || []
+    let libs: string[] = argv.libs || []
+    let scenes: string[] = argv.scenes || []
 
     let injectMap: { [key: string]: boolean } = {}
     for (let k of inject) {

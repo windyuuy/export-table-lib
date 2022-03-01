@@ -1,1 +1,1 @@
-export declare function launchWithCmdOptions(): void;
+export declare function launchWithCmdOptions(): Promise<void>;

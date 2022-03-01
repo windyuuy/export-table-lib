@@ -4,7 +4,7 @@ exports.launchWithCmdOptions = void 0;
 const yargs = require("yargs");
 const exportCmd = require("./commands/export");
 const tokithelper_1 = require("./tokithelper");
-function launchWithCmdOptions() {
+async function launchWithCmdOptions() {
     if (tokithelper_1.tokitHelper.launchOptions) {
         const curdir = `${tokithelper_1.tokitHelper.projectDir}`;
         const argv = tokithelper_1.tokitHelper.convToYargs(tokithelper_1.tokitHelper.launchOptions);
@@ -13,7 +13,7 @@ function launchWithCmdOptions() {
             argv.alls = argv.alls.split(" ");
             argv.allnames = argv.allnames.split(" ");
             argv.inject = argv.inject.split(" ");
-            exportCmd.handler(argv);
+            await exportCmd.handler(argv);
         }
     }
     else {
