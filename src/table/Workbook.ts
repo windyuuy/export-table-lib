@@ -41,7 +41,7 @@ export class Workbook {
      * @param name 
      * @param sheet 
      */
-    addSheet(sheet:Sheet){
+    addSheet(sheet: Sheet) {
         this.sheets.push(sheet);
     }
 
@@ -73,6 +73,8 @@ export class Workbook {
         let validSheetNames = sheetNames.filter(sheetName => !sheetName.endsWith(".meta"))
         for (let sheetName of validSheetNames) {
             const sheet = workBook.Sheets[sheetName];
+            let sheetIndex = workBook.SheetNames.indexOf(sheetName)
+            console.log("sheetIndex:", sheetIndex)
             let s = new Sheet()
             s.workbookName = this.name
             if (sheetName == "Sheet1") {
@@ -94,6 +96,7 @@ export class Workbook {
                     }
                 }
             }
+            s.index = sheetIndex
             this.addSheet(s);
         }
 

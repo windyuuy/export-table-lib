@@ -28,6 +28,10 @@ export class Sheet {
         }
     }
     name: string = "Sheet1"
+    /**
+     * sheet在工作簿中的序号(忽略.meta sheet)
+     */
+    index: number = 0
     nameOrigin: string = "Sheet1"
     isDefault = false
     workbookName!: string

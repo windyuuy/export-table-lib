@@ -22,6 +22,10 @@ class Sheet {
         }
     }
     name = "Sheet1";
+    /**
+     * sheet在工作簿中的序号(忽略.meta sheet)
+     */
+    index = 0;
     nameOrigin = "Sheet1";
     isDefault = false;
     workbookName;

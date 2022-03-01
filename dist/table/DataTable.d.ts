@@ -21,6 +21,7 @@ export declare class DataTable {
      */
     get workbookName(): string;
     get fullName(): string;
+    get index(): number;
     name: string;
     constructor(
     /**

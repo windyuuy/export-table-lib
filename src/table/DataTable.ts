@@ -39,6 +39,10 @@ export class DataTable {
         return this.sheet.fullName
     }
 
+    get index() {
+        return this.sheet.index
+    }
+
     name: string
     constructor(
         /**
@@ -462,12 +466,12 @@ export class DataTable {
             //外键检查
             let fkTable = this.getTableByFK(field);
             if (fkTable == null) {
-                console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键表A ${field.fkTableName}`))
+                console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键表GA ${field.fkTableName}`))
                 return undefined
             }
             let fkField = fkTable.getField(field.fkFieldName!)!
             if (fkField == null) {
-                console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键 ${field.fkTableName}:${field.fkFieldName}`))
+                console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键GA ${field.fkTableName}:${field.fkFieldName}`))
                 return undefined
             }
             let fkData = fkTable.getRowData(fkRefer, fkField)
@@ -476,12 +480,12 @@ export class DataTable {
             //外键数组
             let fkTable = this.getTableByFK(field);
             if (fkTable == null) {
-                console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键表[]A ${field.fkTableName}`))
+                console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键表[]GA ${field.fkTableName}`))
                 return undefined
             }
             let fkField = fkTable.getField(field.fkFieldName!)!
             if (fkField == null) {
-                console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键 ${field.fkTableName}:${field.fkFieldName}`))
+                console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键[]GA ${field.fkTableName}:${field.fkFieldName}`))
                 return undefined
             }
             let fkDatas = (fkRefer as any[]).map(fkR => {
@@ -523,12 +527,12 @@ export class DataTable {
                 //外键检查
                 let fkTable = this.getTableByFK(field);
                 if(fkTable==null){
-                    console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键表B ${field.fkTableName}`))
+                    console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键表EB ${field.fkTableName}`))
                     continue;
                 }
                 let fkField = fkTable.fields?.find(f => f.nameOrigin == field.fkFieldName)!
                 if (fkField == null) {
-                    console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键 ${field.fkTableName}:${field.fkFieldName}`))
+                    console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键EB ${field.fkTableName}:${field.fkFieldName}`))
                     continue;
                 }
                 let list = fkTable.getFieldValueList(field.fkFieldName as string)
@@ -544,12 +548,12 @@ export class DataTable {
                 //外键数组
                 let fkTable = this.getTableByFK(field);
                 if(fkTable==null){
-                    console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键表[]B ${field.fkTableName}`))
+                    console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键表[]EB ${field.fkTableName}`))
                     continue;
                 }
                 let fkField = fkTable.fields?.find(f => f.nameOrigin == field.fkFieldName)!
                 if (fkField == null) {
-                    console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键 ${field.fkTableName}:${field.fkFieldName}`))
+                    console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键[]EB ${field.fkTableName}:${field.fkFieldName}`))
                     continue;
                 }
                 let list = fkTable.getFieldValueList(field.fkFieldName as string)

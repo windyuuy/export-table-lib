@@ -4,6 +4,10 @@ export declare class Sheet {
     constructor();
     applyMeta(meta: SheetMeta): void;
     name: string;
+    /**
+     * sheet在工作簿中的序号(忽略.meta sheet)
+     */
+    index: number;
     nameOrigin: string;
     isDefault: boolean;
     workbookName: string;
