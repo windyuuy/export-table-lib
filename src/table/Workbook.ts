@@ -74,7 +74,6 @@ export class Workbook {
         for (let sheetName of validSheetNames) {
             const sheet = workBook.Sheets[sheetName];
             let sheetIndex = workBook.SheetNames.indexOf(sheetName)
-            console.log("sheetIndex:", sheetIndex)
             let s = new Sheet()
             s.workbookName = this.name
             if (sheetName == "Sheet1") {

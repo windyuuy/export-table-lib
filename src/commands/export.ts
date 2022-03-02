@@ -69,10 +69,12 @@ export async function handler(argv: any) {
     workbookManager.meta.scenes = scenes.concat()
     await workbookManager.build(from);//加载所有表
 
-    const runExport = (scene?: string) => {
+    const runExport = (scene?: string, needInjectSceneFolder?: boolean) => {
         let to = toRoot
         if (scene) {
-            to = join(toRoot, scene)
+            if (needInjectSceneFolder) {
+                to = join(toRoot, scene)
+            }
 
             // 应用场景配置
             workbookManager.applySceneConfig(scene)
@@ -122,12 +124,12 @@ export async function handler(argv: any) {
                 let tables = workbookManager.dataTables
                 for (let table of tables) {
                     if (tableNameFirstLetterUpper) {
-                        table.nameOrigin = firstLetterUpper(table.nameOrigin);
+                        table.name = firstLetterUpper(table.name);
                     }
                     if (matchedPlugins.length > 0) {
                         console.log(`>> handle sheet ${table.nameOrigin}:`)
                         let paras: HandleSheetParams = {
-                            name: table.nameOrigin,
+                            name: table.name,
                             tables: tables,
                             table,
                             workbookManager,
@@ -173,8 +175,9 @@ export async function handler(argv: any) {
         if (scenes.length == 1 && scenes[0] == "*") {
             scenes = workbookManager.collectScenes()
         }
+        let needInjectSceneFolder = scenes.length > 1
         for (let scene of scenes) {
-            runExport(scene)
+            runExport(scene, needInjectSceneFolder)
         }
     } else {
         runExport(undefined)

@@ -63,10 +63,12 @@ async function handler(argv) {
     // 暂时只需要支持一个
     workbookManager.meta.scenes = scenes.concat();
     await workbookManager.build(from); //加载所有表
-    const runExport = (scene) => {
+    const runExport = (scene, needInjectSceneFolder) => {
         let to = toRoot;
         if (scene) {
-            to = (0, path_1.join)(toRoot, scene);
+            if (needInjectSceneFolder) {
+                to = (0, path_1.join)(toRoot, scene);
+            }
             // 应用场景配置
             workbookManager.applySceneConfig(scene);
         }
@@ -108,12 +110,12 @@ async function handler(argv) {
                 let tables = workbookManager.dataTables;
                 for (let table of tables) {
                     if (tableNameFirstLetterUpper) {
-                        table.nameOrigin = firstLetterUpper(table.nameOrigin);
+                        table.name = firstLetterUpper(table.name);
                     }
                     if (matchedPlugins.length > 0) {
                         console.log(`>> handle sheet ${table.nameOrigin}:`);
                         let paras = {
-                            name: table.nameOrigin,
+                            name: table.name,
                             tables: tables,
                             table,
                             workbookManager,
@@ -157,8 +159,9 @@ async function handler(argv) {
         if (scenes.length == 1 && scenes[0] == "*") {
             scenes = workbookManager.collectScenes();
         }
+        let needInjectSceneFolder = scenes.length > 1;
         for (let scene of scenes) {
-            runExport(scene);
+            runExport(scene, needInjectSceneFolder);
         }
     }
     else {

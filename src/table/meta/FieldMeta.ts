@@ -29,7 +29,7 @@ export class FieldMeta {
 		 */
 		public data: string,
 	) {
-		let m = data.match(/(?:\:(\-))?(?:([\w]+)(?:\:(\w+))?\=)?(\w+)/)!
+		let m = data.match(/(?:\:(\-))?(?:([^\:\=]+)(?:\:([^\:\=]+))?\=)?([^\:\=]+)/)!
 		let sign = m[1]
 		let exportName = m[2]
 		let type = m[3]

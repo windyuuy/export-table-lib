@@ -52,7 +52,7 @@ exports.foreach = foreach;
 class Cond {
     lines = [];
     finished = false;
-    if(cond, call) {
+    iff(cond, call) {
         if (this.finished) {
             return;
         }
@@ -97,7 +97,7 @@ class Cond {
 }
 exports.Cond = Cond;
 function iff(cond, call) {
-    return new Cond().if(cond, call);
+    return new Cond().iff(cond, call);
 }
 exports.iff = iff;
 /**

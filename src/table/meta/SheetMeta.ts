@@ -21,7 +21,7 @@ export class SheetMeta {
 		public data: string[]
 	) {
 		let sheetMeta = data.find(d => d.startsWith("#sheet "))!
-		let m = sheetMeta.match(/\#sheet (\-)?(?:(\w+):)?(\w+)/)!
+		let m = sheetMeta.match(/\#sheet (\-)?(?:([^\:]+)\:)?([^\:]+)/)!
 		let sign = m[1]
 		let exportSheetName = m[2]
 		let sheetName = m[3]

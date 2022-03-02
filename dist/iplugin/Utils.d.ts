@@ -27,7 +27,7 @@ export declare function foreach<T>(ls: T[], f: (e: T) => string, sign?: string, 
 export declare class Cond {
     protected lines: string[];
     protected finished: boolean;
-    if(cond: boolean, call: () => string): this | undefined;
+    iff(cond: boolean, call: () => string): this | undefined;
     elseif(cond: boolean, call: () => string): this | undefined;
     else(call: () => string): this | undefined;
     toString(): string;
