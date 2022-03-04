@@ -14,8 +14,16 @@ class Field {
     type;
     index = -1;
     //外键
-    fkTableName;
-    fkFieldName;
+    fkTableNameOrigin;
+    fkFieldNameOrigin;
+    fkTable;
+    get fkTableName() {
+        return this.fkTable?.name;
+    }
+    fkField;
+    get fkFieldName() {
+        return this.fkField?.name;
+    }
     //翻译
     translate = false;
     constructor(name, describe, type) {
@@ -25,7 +33,7 @@ class Field {
         this.type = type;
     }
     get isFKField() {
-        return this.fkTableName != null;
+        return this.fkTableNameOrigin != null;
     }
     applyMeta(fieldMeta) {
         if (fieldMeta.exportName) {

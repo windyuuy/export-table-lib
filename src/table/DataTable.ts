@@ -153,8 +153,16 @@ export class DataTable {
                 type = "any"
             }
             let field = new Field(name, des, type.toLocaleLowerCase() as any)
-            field.fkTableName = fkTableName
-            field.fkFieldName = fkFieldName
+            field.fkTableNameOrigin = fkTableName
+            field.fkFieldNameOrigin = fkFieldName
+            if (field.fkTableNameOrigin !== undefined) {
+                let fkTable = this.getTableByFK(field)
+                field.fkTable = fkTable
+            }
+            if (field.fkFieldNameOrigin !== undefined) {
+                let fkField = this.getFKField(field)
+                field.fkField = fkField
+            }
             field.translate = translate;
             if (this.sheet.data[0][i].describe) {
                 field.describe += "\n" + this.sheet.data[0][i].describe //添加备注
@@ -422,13 +430,18 @@ export class DataTable {
         return data
     }
 
+    /**
+     * 获取字段元信息
+     * @param name 
+     * @returns 
+     */
     getField(name: string) {
         let field = this.fields?.find(f => f.nameOrigin == name)
         return field
     }
 
     getTableByFK(field: Field) {
-        let fkKey = field.fkTableName as string
+        let fkKey = field.fkTableNameOrigin as string
         let tableName: string
         let workbookName: string
         if (fkKey.indexOf(":") <= 0) {
@@ -441,6 +454,20 @@ export class DataTable {
         }
         let fkTable = this.manager!.getTableByName(tableName, workbookName)!
         return fkTable
+    }
+
+    /**
+     * 获取外键字段元信息
+     * @param field 
+     * @returns 
+     */
+    getFKField(field: Field) {
+        let fkTable = this.getTableByFK(field)
+        if (field.fkFieldNameOrigin && fkTable != null) {
+            let fkField = fkTable.getField(field.fkFieldNameOrigin)
+            return fkField
+        }
+        return undefined
     }
 
     getFKObject<T = any>(fkRefer: any, field: Field): T | undefined {
@@ -466,12 +493,12 @@ export class DataTable {
             //外键检查
             let fkTable = this.getTableByFK(field);
             if (fkTable == null) {
-                console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键表GA ${field.fkTableName}`))
+                console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键表GA ${field.fkTableNameOrigin}`))
                 return undefined
             }
-            let fkField = fkTable.getField(field.fkFieldName!)!
+            let fkField = fkTable.getField(field.fkFieldNameOrigin!)!
             if (fkField == null) {
-                console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键GA ${field.fkTableName}:${field.fkFieldName}`))
+                console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键GA ${field.fkTableNameOrigin}:${field.fkFieldNameOrigin}`))
                 return undefined
             }
             let fkData = fkTable.getRowData(fkRefer, fkField)
@@ -480,12 +507,12 @@ export class DataTable {
             //外键数组
             let fkTable = this.getTableByFK(field);
             if (fkTable == null) {
-                console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键表[]GA ${field.fkTableName}`))
+                console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键表[]GA ${field.fkTableNameOrigin}`))
                 return undefined
             }
-            let fkField = fkTable.getField(field.fkFieldName!)!
+            let fkField = fkTable.getField(field.fkFieldNameOrigin!)!
             if (fkField == null) {
-                console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键[]GA ${field.fkTableName}:${field.fkFieldName}`))
+                console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键[]GA ${field.fkTableNameOrigin}:${field.fkFieldNameOrigin}`))
                 return undefined
             }
             let fkDatas = (fkRefer as any[]).map(fkR => {
@@ -527,15 +554,15 @@ export class DataTable {
                 //外键检查
                 let fkTable = this.getTableByFK(field);
                 if(fkTable==null){
-                    console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键表EB ${field.fkTableName}`))
+                    console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键表EB ${field.fkTableNameOrigin}`))
                     continue;
                 }
-                let fkField = fkTable.fields?.find(f => f.nameOrigin == field.fkFieldName)!
+                let fkField = fkTable.fields?.find(f => f.nameOrigin == field.fkFieldNameOrigin)!
                 if (fkField == null) {
-                    console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键EB ${field.fkTableName}:${field.fkFieldName}`))
+                    console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键EB ${field.fkTableNameOrigin}:${field.fkFieldNameOrigin}`))
                     continue;
                 }
-                let list = fkTable.getFieldValueList(field.fkFieldName as string)
+                let list = fkTable.getFieldValueList(field.fkFieldNameOrigin as string)
                 for(let j=0;j<data.length;j++){
                     let line=data[j]
                     let v = toTypeValue(line[i], fkField.type);//找到相应的值
@@ -548,15 +575,15 @@ export class DataTable {
                 //外键数组
                 let fkTable = this.getTableByFK(field);
                 if(fkTable==null){
-                    console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键表[]EB ${field.fkTableName}`))
+                    console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键表[]EB ${field.fkTableNameOrigin}`))
                     continue;
                 }
-                let fkField = fkTable.fields?.find(f => f.nameOrigin == field.fkFieldName)!
+                let fkField = fkTable.fields?.find(f => f.nameOrigin == field.fkFieldNameOrigin)!
                 if (fkField == null) {
-                    console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键[]EB ${field.fkTableName}:${field.fkFieldName}`))
+                    console.error(chalk.red(`表${this.nameOrigin} 字段<${field.nameOrigin}> 无法找到外键[]EB ${field.fkTableNameOrigin}:${field.fkFieldNameOrigin}`))
                     continue;
                 }
-                let list = fkTable.getFieldValueList(field.fkFieldName as string)
+                let list = fkTable.getFieldValueList(field.fkFieldNameOrigin as string)
                 for (let j = 0; j < data.length; j++) {
                     let line=data[j]
                     let v = line[i];//找到相应的值

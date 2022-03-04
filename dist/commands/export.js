@@ -42,7 +42,9 @@ function tryImport(str) {
     try {
         return require(str);
     }
-    catch { }
+    catch (e) {
+        // console.error(chalk.red(`${e}`))
+    }
     return ImportFailed;
 }
 async function handler(argv) {

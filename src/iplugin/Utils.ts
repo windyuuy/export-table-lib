@@ -48,36 +48,36 @@ export function foreach<T>(ls: T[], f: (e: T) => string, sign: string = "\n", au
 export class Cond {
 	protected lines: string[] = []
 	protected finished: boolean = false
-	iff(cond: boolean, call: () => string) {
+	iff(cond: boolean, call: (cond: Cond) => string) {
 		if (this.finished) {
 			return
 		}
 		if (cond) {
 			this.finished = true
-			let str = call()
+			let str = call(this)
 			this.lines.push(str)
 		}
 		return this
 	}
 
-	elseif(cond: boolean, call: () => string) {
+	elseif(cond: boolean, call: (cond: Cond) => string) {
 		if (this.finished) {
 			return
 		}
 		if (cond) {
 			this.finished = true
-			let str = call()
+			let str = call(this)
 			this.lines.push(str)
 		}
 		return this
 	}
 
-	else(call: () => string) {
+	else(call: (cond: Cond) => string) {
 		if (this.finished) {
 			return
 		}
 		this.finished = true
-		let str = call()
+		let str = call(this)
 		this.lines.push(str)
 		return this
 	}
@@ -95,9 +95,9 @@ export class Cond {
 	}
 }
 
-export function iff(cond: boolean, call: () => string): Cond
-export function iff(cond: any, call: () => string): Cond
-export function iff(cond: boolean, call: () => string) {
+export function iff(cond: boolean, call: (cond: Cond) => string): Cond
+export function iff(cond: any, call: (cond: Cond) => string): Cond
+export function iff(cond: boolean, call: (cond: Cond) => string) {
 	return new Cond().iff(cond, call)
 }
 

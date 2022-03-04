@@ -54,8 +54,19 @@ export declare class DataTable {
      */
     getObjectList(): any[];
     getRowData(key: any, field: Field): any[] | undefined;
+    /**
+     * 获取字段元信息
+     * @param name
+     * @returns
+     */
     getField(name: string): Field | undefined;
     getTableByFK(field: Field): DataTable;
+    /**
+     * 获取外键字段元信息
+     * @param field
+     * @returns
+     */
+    getFKField(field: Field): Field | undefined;
     getFKObject<T = any>(fkRefer: any, field: Field): T | undefined;
     getFKData<T = any[]>(fkRefer: any, field: Field): T | undefined;
     /**

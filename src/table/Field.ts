@@ -1,3 +1,4 @@
+import { DataTable } from "./DataTable";
 import { FieldExtendMode, FieldMeta } from "./meta/FieldMeta";
 
 export type FiledType = "any" | "uid" | "number" | "number[]" | "bool" | "bool[]" | "string" | "object" | "object[]" | "fk" | "string*" | "string[]" | "key" | "fk[]"
@@ -18,9 +19,17 @@ export class Field {
 	index: number = -1
 
 	//外键
-	fkTableName: string | undefined;
-	fkFieldName: string | undefined;
+	fkTableNameOrigin?: string;
+	fkFieldNameOrigin?: string;
 
+	fkTable?: DataTable
+	get fkTableName(): string | undefined {
+		return this.fkTable?.name
+	}
+	fkField?: Field
+	get fkFieldName(): string | undefined {
+		return this.fkField?.name
+	}
 
 	//翻译
 	translate: boolean = false;
@@ -32,7 +41,7 @@ export class Field {
 	}
 
 	get isFKField() {
-		return this.fkTableName != null
+		return this.fkTableNameOrigin != null
 	}
 
 	applyMeta(fieldMeta: FieldMeta) {

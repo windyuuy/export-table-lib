@@ -58,7 +58,7 @@ class Cond {
         }
         if (cond) {
             this.finished = true;
-            let str = call();
+            let str = call(this);
             this.lines.push(str);
         }
         return this;
@@ -69,7 +69,7 @@ class Cond {
         }
         if (cond) {
             this.finished = true;
-            let str = call();
+            let str = call(this);
             this.lines.push(str);
         }
         return this;
@@ -79,7 +79,7 @@ class Cond {
             return;
         }
         this.finished = true;
-        let str = call();
+        let str = call(this);
         this.lines.push(str);
         return this;
     }

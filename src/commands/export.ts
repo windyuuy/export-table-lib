@@ -44,7 +44,9 @@ let ImportFailed = Symbol("FailedImport")
 function tryImport<T>(str: string): T | symbol {
     try {
         return require(str)
-    } catch { }
+    } catch (e) {
+        // console.error(chalk.red(`${e}`))
+    }
     return ImportFailed;
 }
 
