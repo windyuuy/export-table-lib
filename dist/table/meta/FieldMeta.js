@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FieldMeta = exports.FieldExtendMode = void 0;
+const CustomFieldMeta_1 = require("./CustomFieldMeta");
 /**
  * 继承模式
  */
@@ -24,6 +25,17 @@ class FieldMeta {
      */
     extendMode = FieldExtendMode.Add;
     name;
+    /**
+     * 自定义元信息
+     */
+    customMetas = [];
+    addCustomMeta(s) {
+        let metaS = s.split(" ").slice(2).join(" ");
+        let meta = new CustomFieldMeta_1.CustomFieldMeta();
+        meta.index = this.customMetas.length;
+        meta.key = metaS;
+        this.customMetas.push(meta);
+    }
     constructor(
     /**
      * 源名称

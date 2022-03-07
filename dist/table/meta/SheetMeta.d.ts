@@ -1,4 +1,5 @@
 import { Sheet } from "../Sheet";
+import { CustomSheetMeta } from "./CustomSheetMeta";
 import { FieldMeta } from "./FieldMeta";
 /**
  * 继承模式
@@ -23,5 +24,10 @@ export declare class SheetMeta {
     exportSheetName?: string;
     extendMode: SheetExtendMode;
     fieldMetas: FieldMeta[];
+    /**
+     * 自定义元信息
+     */
+    customMetas: CustomSheetMeta[];
+    addCustomMeta(s: string): void;
     addFieldMeta(fieldMeta: FieldMeta): void;
 }

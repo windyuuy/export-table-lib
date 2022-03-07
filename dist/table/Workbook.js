@@ -125,6 +125,23 @@ class Workbook {
                         let fieldMeta = new FieldMeta_1.FieldMeta(fieldMetaData);
                         sheetMeta.addFieldMeta(fieldMeta);
                     }
+                    // sheet增加自定义meta
+                    {
+                        let reg = new RegExp(`#sheet.meta ${sheet.name}`);
+                        let customMetas = sheetMetaData.filter(d => d.match(reg));
+                        for (let m of customMetas) {
+                            sheetMeta.addCustomMeta(m);
+                        }
+                    }
+                    // field增加自定义meta
+                    for (let fieldMeta of sheetMeta.fieldMetas) {
+                        let name = fieldMeta;
+                        let reg = new RegExp(`#field.meta ${name}`);
+                        let customMetas = sheetMetaData.filter(d => d.match(reg));
+                        for (let m of customMetas) {
+                            fieldMeta.addCustomMeta(m);
+                        }
+                    }
                 }
             }
         }

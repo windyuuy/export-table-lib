@@ -1,6 +1,6 @@
 {
     "name": "export-table-lib",
-    "version": "1.0.26",
+    "version": "1.0.31",
     "description": "export-table-lib",
     "main": "dist/index.js",
     "files": [

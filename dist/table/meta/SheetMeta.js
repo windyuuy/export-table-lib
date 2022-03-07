@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SheetMeta = exports.SheetExtendMode = void 0;
+const CustomSheetMeta_1 = require("./CustomSheetMeta");
 /**
  * 继承模式
  */
@@ -32,6 +33,17 @@ class SheetMeta {
     exportSheetName;
     extendMode = SheetExtendMode.Add;
     fieldMetas = [];
+    /**
+     * 自定义元信息
+     */
+    customMetas = [];
+    addCustomMeta(s) {
+        let metaS = s.split(" ").slice(2).join(" ");
+        let meta = new CustomSheetMeta_1.CustomSheetMeta();
+        meta.index = this.customMetas.length;
+        meta.key = metaS;
+        this.customMetas.push(meta);
+    }
     addFieldMeta(fieldMeta) {
         this.fieldMetas.push(fieldMeta);
     }

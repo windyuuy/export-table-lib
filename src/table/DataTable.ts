@@ -72,6 +72,7 @@ export class DataTable {
                 field.skip = field.skipOrigin
             }
         }
+        this.updateFieldsOrder()
 
         meta.fieldMetas.forEach((fieldMeta) => {
             let field = this.getField(fieldMeta.name)
@@ -82,6 +83,17 @@ export class DataTable {
             }
         })
 
+    }
+
+    updateFieldsOrder() {
+        let fieldIndex = 0
+        for (let field of this.fields ?? []) {
+            if (!field.skip) {
+                // field.index
+                field.index = fieldIndex
+                fieldIndex++
+            }
+        }
     }
 
     isNullCell(cell:Cell|null){
@@ -116,10 +128,12 @@ export class DataTable {
                 skip.skip = true;
                 skip.skipOrigin = true;
                 skip.index = i
+                skip.indexOrigin = i
                 fieldList.push(skip)
                 continue;
             }
 
+            let isUnique = false
             let typeList = ["any", "uid", "number", "number[]", "bool", "bool[]", "string", "string[]", "object", "object[]", "key"]
             if (typeList.indexOf(type.toLowerCase()) != -1) {
                 //常规类型
@@ -148,11 +162,25 @@ export class DataTable {
             } else if (type == "string*") {
                 type = "string"
                 translate = true;
+            } else if (type.substr(0, 3).toLowerCase() == "uid") {
+                let param = type.split(/\s+/)
+                if (param.length < 2) {
+                    type = "uid"
+                } else {
+                    let utype = param[1]
+                    if (typeList.indexOf(utype.toLowerCase()) <= 0) {
+                        console.error(chalk.red(`唯一key ${type} 配置错误`))
+                        return null;
+                    }
+                    type = utype
+                }
+                isUnique = true
             } else {
                 //不支持的类型
                 type = "any"
             }
             let field = new Field(name, des, type.toLocaleLowerCase() as any)
+            field.isUnique = isUnique
             field.fkTableNameOrigin = fkTableName
             field.fkFieldNameOrigin = fkFieldName
             if (field.fkTableNameOrigin !== undefined) {
@@ -168,6 +196,7 @@ export class DataTable {
                 field.describe += "\n" + this.sheet.data[0][i].describe //添加备注
             }
             field.index = i
+            field.indexOrigin = i
 
             fieldList.push(field)
         }
@@ -424,7 +453,7 @@ export class DataTable {
     }
 
     getRowData(key: any, field: Field) {
-        let fieldIndex = field.index
+        let fieldIndex = field.indexOrigin
         let realKey = toTypeValue(key, field.type)
         let data = this.dataList.find(d => d[fieldIndex] == realKey)
         return data
@@ -538,19 +567,20 @@ export class DataTable {
         fieldList=fieldList.filter(a=>a.skip==false)
         //检查 uid 和 fk
         for(let i=0;i<fieldList.length;i++){
-            let field=fieldList[i];
-            if(field.type=="uid"){
+            let field = fieldList[i];
+
+            if (field.isUnique) {
                 //唯一ID 检查
-                let map=[]
-                for(let j=0;j<data.length;j++){
-                    let line=data[j]
-                    let v=line[i];//找到相应的值
-                    if(map[v]==true){
+                let map = new Map()
+                for (let j = 0; j < data.length; j++) {
+                    let line = data[j]
+                    let v = JSON.stringify(line[i]);//找到相应的值
+                    if (map.has(v)) {
                         console.error(chalk.red(`表${this.nameOrigin} 行${j + 4} 字段<${field.nameOrigin}> 出现重复值 ${v}`))
                     }
-                    map[v]=true;
+                    map.set(v, true);
                 }
-            }else if(field.type=="fk"){
+            } else if (field.type == "fk") {
                 //外键检查
                 let fkTable = this.getTableByFK(field);
                 if(fkTable==null){

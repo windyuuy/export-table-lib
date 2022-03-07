@@ -11,21 +11,57 @@ export class Field {
 	skip: boolean = false;
 	skipOrigin: boolean = false;
 
+	/**
+	 * 导出命名
+	 */
 	name: string;
+	/**
+	 * 原始命名
+	 */
 	nameOrigin: string;
+	/**
+	 * 描述文字, 可作为注释
+	 */
 	describe: string;
+	/**
+	 * 类型名
+	 */
 	type: FiledType;
 
+	/**
+	 * 是否唯一
+	 */
+	isUnique: boolean = false
+
+	/**
+	 * 从左到右出现顺序
+	 */
+	indexOrigin: number = -1
+
+	/**
+	 * 从左到右出现顺序
+	 */
 	index: number = -1
 
-	//外键
+	/**
+	 * 外键表
+	 */
 	fkTableNameOrigin?: string;
+	/**
+	 * 外键类型信息
+	 */
 	fkFieldNameOrigin?: string;
 
+	/**
+	 * 外键数据表
+	 */
 	fkTable?: DataTable
 	get fkTableName(): string | undefined {
 		return this.fkTable?.name
 	}
+	/**
+	 * 外键域
+	 */
 	fkField?: Field
 	get fkFieldName(): string | undefined {
 		return this.fkField?.name
@@ -33,6 +69,9 @@ export class Field {
 
 	//翻译
 	translate: boolean = false;
+
+	meta?: FieldMeta
+
 	constructor(name: string, describe: string, type: FiledType) {
 		this.nameOrigin = name;
 		this.name = name
@@ -58,6 +97,8 @@ export class Field {
 		} else {
 			this.skip = false
 		}
+
+		this.meta = fieldMeta
 	}
 
 }

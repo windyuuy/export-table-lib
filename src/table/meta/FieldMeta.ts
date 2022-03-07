@@ -1,4 +1,5 @@
 import { Field, FiledType } from "../Field"
+import { CustomFieldMeta } from "./CustomFieldMeta"
 
 /**
  * 继承模式
@@ -22,6 +23,19 @@ export class FieldMeta {
 	 */
 	extendMode: FieldExtendMode = FieldExtendMode.Add
 	name: string
+
+	/**
+	 * 自定义元信息
+	 */
+	customMetas: CustomFieldMeta[] = []
+
+	addCustomMeta(s: string) {
+		let metaS = s.split(" ").slice(2).join(" ")
+		let meta = new CustomFieldMeta()
+		meta.index = this.customMetas.length
+		meta.key = metaS
+		this.customMetas.push(meta)
+	}
 
 	constructor(
 		/**

@@ -33,6 +33,7 @@ export declare class DataTable {
      */
     nameOrigin: string);
     applyMeta(meta: SheetMeta): void;
+    updateFieldsOrder(): void;
     isNullCell(cell: Cell | null): boolean;
     protected getFields(): Field[] | null;
     protected _fields: Field[] | null;

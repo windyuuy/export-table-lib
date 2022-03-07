@@ -1,4 +1,5 @@
 import { Sheet } from "../Sheet"
+import { CustomSheetMeta } from "./CustomSheetMeta"
 import { FieldMeta } from "./FieldMeta"
 
 /**
@@ -34,6 +35,18 @@ export class SheetMeta {
 	exportSheetName?: string
 	extendMode: SheetExtendMode = SheetExtendMode.Add
 	fieldMetas: FieldMeta[] = []
+
+	/**
+	 * 自定义元信息
+	 */
+	customMetas: CustomSheetMeta[] = []
+	addCustomMeta(s: string) {
+		let metaS = s.split(" ").slice(2).join(" ")
+		let meta = new CustomSheetMeta()
+		meta.index = this.customMetas.length
+		meta.key = metaS
+		this.customMetas.push(meta)
+	}
 
 	addFieldMeta(fieldMeta: FieldMeta) {
 		this.fieldMetas.push(fieldMeta)

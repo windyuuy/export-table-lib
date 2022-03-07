@@ -8,24 +8,59 @@ class Field {
      */
     skip = false;
     skipOrigin = false;
+    /**
+     * 导出命名
+     */
     name;
+    /**
+     * 原始命名
+     */
     nameOrigin;
+    /**
+     * 描述文字, 可作为注释
+     */
     describe;
+    /**
+     * 类型名
+     */
     type;
+    /**
+     * 是否唯一
+     */
+    isUnique = false;
+    /**
+     * 从左到右出现顺序
+     */
+    indexOrigin = -1;
+    /**
+     * 从左到右出现顺序
+     */
     index = -1;
-    //外键
+    /**
+     * 外键表
+     */
     fkTableNameOrigin;
+    /**
+     * 外键类型信息
+     */
     fkFieldNameOrigin;
+    /**
+     * 外键数据表
+     */
     fkTable;
     get fkTableName() {
         return this.fkTable?.name;
     }
+    /**
+     * 外键域
+     */
     fkField;
     get fkFieldName() {
         return this.fkField?.name;
     }
     //翻译
     translate = false;
+    meta;
     constructor(name, describe, type) {
         this.nameOrigin = name;
         this.name = name;
@@ -48,6 +83,7 @@ class Field {
         else {
             this.skip = false;
         }
+        this.meta = fieldMeta;
     }
 }
 exports.Field = Field;
