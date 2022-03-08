@@ -2,16 +2,16 @@ import { Sheet } from "./Sheet";
 import { WorkbookManager } from "./WorkbookManager";
 import chalk from "chalk";
 import { Cell } from "./Cell";
-import { Field } from "./Field";
+import { Field, FiledType } from "./Field";
 import { SheetExtendMode, SheetMeta } from "./meta/SheetMeta";
 
-const toTypeValue = (v: any, t: string) => {
+const toTypeValue = (v: any, t: FiledType) => {
     if (typeof (v) != t) {
-        if (t == "string") {
+        if (t == "string" || t == "key" || t == "string*") {
             return `${v}`
-        } else if (t == "number") {
+        } else if (t == "number" || t == "uid") {
             return parseFloat(v)
-        } else if (t == "boolean") {
+        } else if (t == "bool") {
             return !!v
         } else {
             return v

@@ -6,13 +6,13 @@ const Field_1 = require("./Field");
 const SheetMeta_1 = require("./meta/SheetMeta");
 const toTypeValue = (v, t) => {
     if (typeof (v) != t) {
-        if (t == "string") {
+        if (t == "string" || t == "key" || t == "string*") {
             return `${v}`;
         }
-        else if (t == "number") {
+        else if (t == "number" || t == "uid") {
             return parseFloat(v);
         }
-        else if (t == "boolean") {
+        else if (t == "bool") {
             return !!v;
         }
         else {
