@@ -20,6 +20,7 @@ export function builder(yargs:typeof import("yargs")) {
         .array("inject").describe("inject", "注入到模板中的boolean形变量，可以间接控制模板功能")
         .string("packagename").describe("packagename", "包名称")
         .boolean("tableNameFirstLetterUpper").describe("tableNameFirstLetterUpper", "talbe首字母大写")
+        .boolean("verbose")
         .demandOption(["from", "to"])
         .array("libs").describe("external npm modules path", "扩展npm模块路径")
         .array("scenes").describe("export scene", "导出场景")
@@ -41,7 +42,7 @@ function firstLetterUpper(str:string){
 };
 
 let ImportFailed = Symbol("FailedImport")
-function tryImport<T>(str: string): T | symbol {
+function tryImport<T>(str: string, verbose: boolean): T | symbol {
     try {
         return require(str)
     } catch (e) {
@@ -59,6 +60,7 @@ export async function handler(argv: any) {
     let tableNameFirstLetterUpper: boolean | false = argv.tableNameFirstLetterUpper;
     let libs: string[] = argv.libs || []
     let scenes: string[] = argv.scenes || []
+    let verbose: boolean = argv.verbose ?? false
 
     let injectMap: { [key: string]: boolean } = {}
     for (let k of inject) {
@@ -97,15 +99,21 @@ export async function handler(argv: any) {
             let pluginName = ps[0]
             let pluginFullName = "export-table-pulgin-" + pluginName
             type TPlugin = { ExportPlugins: IPlugin[] }
-            let plugin: TPlugin | symbol
+            let plugin: TPlugin | symbol = ImportFailed
             {
-                plugin = tryImport<TPlugin>(pluginFullName)
-                if (plugin == ImportFailed) {
+                if (libs.length > 0) {
                     for (let lib of libs) {
-                        plugin = tryImport(join(lib, pluginFullName))
+                        plugin = tryImport(join(lib, pluginFullName), verbose)
                         if (plugin != ImportFailed) {
+                            console.log(`using local plugin ${lib}/:${pluginFullName}`)
                             break
                         }
+                    }
+                }
+                if (plugin == ImportFailed) {
+                    plugin = tryImport<TPlugin>(pluginFullName, verbose)
+                    if (plugin != ImportFailed) {
+                        console.log(`using global plugin ${pluginFullName}`)
                     }
                 }
             }

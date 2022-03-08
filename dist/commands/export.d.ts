@@ -15,6 +15,8 @@ export declare function builder(yargs: typeof import("yargs")): import("yargs").
     packagename: string | undefined;
 } & {
     tableNameFirstLetterUpper: boolean | undefined;
+} & {
+    verbose: boolean | undefined;
 }, "from" | "to"> & {
     from: string;
     to: string;

@@ -17,6 +17,7 @@ function builder(yargs) {
         .array("inject").describe("inject", "注入到模板中的boolean形变量，可以间接控制模板功能")
         .string("packagename").describe("packagename", "包名称")
         .boolean("tableNameFirstLetterUpper").describe("tableNameFirstLetterUpper", "talbe首字母大写")
+        .boolean("verbose")
         .demandOption(["from", "to"])
         .array("libs").describe("external npm modules path", "扩展npm模块路径")
         .array("scenes").describe("export scene", "导出场景")
@@ -38,7 +39,7 @@ function firstLetterUpper(str) {
 }
 ;
 let ImportFailed = Symbol("FailedImport");
-function tryImport(str) {
+function tryImport(str, verbose) {
     try {
         return require(str);
     }
@@ -56,6 +57,7 @@ async function handler(argv) {
     let tableNameFirstLetterUpper = argv.tableNameFirstLetterUpper;
     let libs = argv.libs || [];
     let scenes = argv.scenes || [];
+    let verbose = argv.verbose ?? false;
     let injectMap = {};
     for (let k of inject) {
         injectMap[k] = true;
@@ -86,15 +88,21 @@ async function handler(argv) {
             let tag = ps[1];
             let pluginName = ps[0];
             let pluginFullName = "export-table-pulgin-" + pluginName;
-            let plugin;
+            let plugin = ImportFailed;
             {
-                plugin = tryImport(pluginFullName);
-                if (plugin == ImportFailed) {
+                if (libs.length > 0) {
                     for (let lib of libs) {
-                        plugin = tryImport((0, path_1.join)(lib, pluginFullName));
+                        plugin = tryImport((0, path_1.join)(lib, pluginFullName), verbose);
                         if (plugin != ImportFailed) {
+                            console.log(`using local plugin ${lib}/:${pluginFullName}`);
                             break;
                         }
+                    }
+                }
+                if (plugin == ImportFailed) {
+                    plugin = tryImport(pluginFullName, verbose);
+                    if (plugin != ImportFailed) {
+                        console.log(`using global plugin ${pluginFullName}`);
                     }
                 }
             }
