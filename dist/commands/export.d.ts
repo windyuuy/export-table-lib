@@ -23,6 +23,12 @@ export declare function builder(yargs: typeof import("yargs")): import("yargs").
 } & {
     libs: (string | number)[] | undefined;
 } & {
+    l: (string | number)[] | undefined;
+} & {
     scenes: (string | number)[] | undefined;
+} & {
+    recursive: boolean | undefined;
+} & {
+    r: boolean | undefined;
 }>;
 export declare function handler(argv: any): Promise<void>;

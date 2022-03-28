@@ -7,7 +7,7 @@ export declare class WorkbookManager {
     meta: SceneMetaManager;
     constructor();
     applySceneConfig(scene0: string): void;
-    build(buildPath: string): Promise<void>;
+    build(buildPath: string, recursive?: boolean): Promise<void>;
     protected buildExcel(excel: string): Promise<void>;
     /**
      * 获取工作簿列表

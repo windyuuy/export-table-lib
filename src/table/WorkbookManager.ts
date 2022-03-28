@@ -28,24 +28,37 @@ export class WorkbookManager {
         }
     }
 
-    async build(buildPath:string){
+    async build(buildPath: string, recursive: boolean = false) {
         
         let buildPromiseList:Promise<void>[]=[];
 
-        let fileList = fs.readdirSync(buildPath);
-        for (let i = 0; i < fileList.length; i++) {
-            let filePath = fileList[i];
+        if (!fs.statSync(buildPath).isDirectory()) {
+            let filePath = buildPath
             //点开头的为隐藏文件
             if (path.basename(filePath)[0] == "." || path.basename(filePath)[0] == "~") {
-                continue;
-            }
-            let state = fs.statSync(path.join(buildPath, filePath))
-            if(state.isDirectory()){
-                //继续向子目录查找
-                buildPromiseList.push(this.build(path.join(buildPath, filePath)))
+                // skip
             } else if (path.extname(filePath) == ".xlsx") {
                 //找到xls文件
-                buildPromiseList.push(this.buildExcel(path.join(buildPath, filePath)));
+                buildPromiseList.push(this.buildExcel(filePath));
+            }
+        } else {
+            let fileList = fs.readdirSync(buildPath);
+            for (let i = 0; i < fileList.length; i++) {
+                let filePath = fileList[i];
+                //点开头的为隐藏文件
+                if (path.basename(filePath)[0] == "." || path.basename(filePath)[0] == "~") {
+                    continue;
+                }
+                let state = fs.statSync(path.join(buildPath, filePath))
+                if (state.isDirectory()) {
+                    if (recursive) {
+                        //继续向子目录查找
+                        buildPromiseList.push(this.build(path.join(buildPath, filePath)))
+                    }
+                } else if (path.extname(filePath) == ".xlsx") {
+                    //找到xls文件
+                    buildPromiseList.push(this.buildExcel(path.join(buildPath, filePath)));
+                }
             }
         }
 

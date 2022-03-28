@@ -22,8 +22,9 @@ export function builder(yargs:typeof import("yargs")) {
         .boolean("tableNameFirstLetterUpper").describe("tableNameFirstLetterUpper", "talbe首字母大写")
         .boolean("verbose")
         .demandOption(["from", "to"])
-        .array("libs").describe("external npm modules path", "扩展npm模块路径")
+        .array("libs").describe("external npm modules path", "扩展npm模块路径").alias("l", "libs")
         .array("scenes").describe("export scene", "导出场景")
+        .boolean("recursive").alias("r", "recursive")
         .help("h")
 }
 
@@ -61,6 +62,7 @@ export async function handler(argv: any) {
     let libs: string[] = argv.libs || []
     let scenes: string[] = argv.scenes || []
     let verbose: boolean = argv.verbose ?? false
+    let recursive: boolean = argv.recursive ?? false
 
     let injectMap: { [key: string]: boolean } = {}
     for (let k of inject) {
@@ -71,7 +73,7 @@ export async function handler(argv: any) {
     let workbookManager = new WorkbookManager();
     // 暂时只需要支持一个
     workbookManager.meta.scenes = scenes.concat()
-    await workbookManager.build(from);//加载所有表
+    await workbookManager.build(from, recursive);//加载所有表
 
     const runExport = (scene?: string, needInjectSceneFolder?: boolean) => {
         let to = toRoot
