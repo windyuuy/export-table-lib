@@ -125,7 +125,7 @@ class DataTable {
                 continue;
             }
             let isUnique = false;
-            let typeList = ["any", "uid", "number", "number[]", "bool", "bool[]", "string", "string[]", "object", "object[]", "key"];
+            let typeList = ["any", "number", "number[]", "bool", "bool[]", "string", "string[]", "object", "object[]", "key"];
             if (typeList.indexOf(type.toLowerCase()) != -1) {
                 //常规类型
             }
@@ -361,7 +361,9 @@ class DataTable {
                 data = -1;
             }
             else if (isNaN(parseInt(data))) {
-                console.error(chalk_1.default.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> fk类型值填写错误 ${data}`));
+                if (this.getFKField(field)?.type == "number") {
+                    console.error(chalk_1.default.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> fk类型值填写错误 ${data}`));
+                }
             }
             return data;
         }

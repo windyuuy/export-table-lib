@@ -134,7 +134,7 @@ export class DataTable {
             }
 
             let isUnique = false
-            let typeList = ["any", "uid", "number", "number[]", "bool", "bool[]", "string", "string[]", "object", "object[]", "key"]
+            let typeList = ["any", "number", "number[]", "bool", "bool[]", "string", "string[]", "object", "object[]", "key"]
             if (typeList.indexOf(type.toLowerCase()) != -1) {
                 //常规类型
             } else if (type.substr(0, 4).toLocaleLowerCase() == "fk[]") {//外键数组
@@ -351,7 +351,9 @@ export class DataTable {
             if(data===null||data===undefined||data===""||data=="undefined"){
                 data=-1;
             }else if(isNaN(parseInt(data))){
-                console.error(chalk.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> fk类型值填写错误 ${data}`))
+                if (this.getFKField(field)?.type == "number") {
+                    console.error(chalk.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> fk类型值填写错误 ${data}`))
+                }
             }
             return data
         }else if(field.type=="key"){
