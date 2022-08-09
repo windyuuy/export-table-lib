@@ -264,7 +264,7 @@ class DataTable {
             }
             return newValue;
         }
-        else if (field.type == "number[]" || field.type == "int[]" || field.type == "long[]") {
+        else if (field.type == "number[]") {
             if (data == undefined || data === "" || data == "[]")
                 data = null;
             if (typeof data == "number") {
@@ -276,6 +276,30 @@ class DataTable {
                 let result = [];
                 for (let i = 0; i < list.length; i++) {
                     let v = parseFloat(list[i]);
+                    if (isNaN(v)) {
+                        v = 0;
+                        console.error(chalk_1.default.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> ${field.type}类型值填写错误 ${data}`));
+                    }
+                    result.push(v);
+                }
+                return result;
+            }
+            else {
+                return [];
+            }
+        }
+        else if (field.type == "int[]" || field.type == "long[]") {
+            if (data == undefined || data === "" || data == "[]")
+                data = null;
+            if (typeof data == "number") {
+                return [data];
+            }
+            else if (typeof data == "string") {
+                data = data.replace(/\[|\]/g, "");
+                let list = data.split(/,|;/);
+                let result = [];
+                for (let i = 0; i < list.length; i++) {
+                    let v = (0, exports.strictParseInt)(list[i]);
                     if (isNaN(v)) {
                         v = 0;
                         console.error(chalk_1.default.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> ${field.type}类型值填写错误 ${data}`));
