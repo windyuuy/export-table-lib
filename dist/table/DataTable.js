@@ -1,9 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DataTable = void 0;
+exports.DataTable = exports.strictParseInt = void 0;
 const chalk_1 = require("chalk");
 const Field_1 = require("./Field");
 const SheetMeta_1 = require("./meta/SheetMeta");
+/**
+ * 严格检查是否整形, 而非浮点型, 并转换出整形
+ * @param n
+ * @returns
+ */
+const strictParseInt = (n) => {
+    var fn = parseFloat(n);
+    if (isNaN(fn)) {
+        return parseInt(n);
+    }
+    else {
+        var ln = parseInt(n);
+        if (fn != ln) {
+            return NaN;
+        }
+        else {
+            return ln;
+        }
+    }
+};
+exports.strictParseInt = strictParseInt;
 const toTypeValue = (v, t) => {
     if (typeof (v) != t) {
         if (t == "string" || t == "key" || t == "string*") {
@@ -13,7 +34,7 @@ const toTypeValue = (v, t) => {
             return parseFloat(v);
         }
         else if (t == "int" || t == "long") {
-            return parseInt(v);
+            return (0, exports.strictParseInt)(v);
         }
         else if (t == "bool") {
             return !!v;
@@ -216,17 +237,27 @@ class DataTable {
             return data;
         }
         else if (field.type == "uid") {
-            let newValue = parseInt(data);
+            let newValue = parseFloat(data);
             if (isNaN(newValue)) {
                 newValue = 0;
-                console.error(chalk_1.default.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> uid类型值填写错误 ${data}`));
+                console.error(chalk_1.default.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> ${field.type}类型值填写错误 ${data}`));
             }
             return newValue;
         }
-        else if (field.type == "number" || field.type == "int" || field.type == "long") {
+        else if (field.type == "number") {
             if (data == undefined || data === "")
                 data = 0;
             let newValue = parseFloat(data);
+            if (isNaN(newValue)) {
+                newValue = 0;
+                console.error(chalk_1.default.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> ${field.type}类型值填写错误 ${data}`));
+            }
+            return newValue;
+        }
+        else if (field.type == "int" || field.type == "long") {
+            if (data == undefined || data === "")
+                data = 0;
+            let newValue = (0, exports.strictParseInt)(data);
             if (isNaN(newValue)) {
                 newValue = 0;
                 console.error(chalk_1.default.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> ${field.type}类型值填写错误 ${data}`));
@@ -372,7 +403,7 @@ class DataTable {
                     }
                 }
                 else if (fkType == "int" || fkType == "long") {
-                    if (isNaN(parseInt(data))) {
+                    if (isNaN((0, exports.strictParseInt)(data))) {
                         console.error(chalk_1.default.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> fk${fkType}类型值填写错误 ${data}`));
                     }
                 }

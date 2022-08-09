@@ -4,6 +4,12 @@ import { Cell } from "./Cell";
 import { Field } from "./Field";
 import { SheetMeta } from "./meta/SheetMeta";
 /**
+ * 严格检查是否整形, 而非浮点型, 并转换出整形
+ * @param n
+ * @returns
+ */
+export declare const strictParseInt: (n: any) => number;
+/**
  * 专门处理普通数据表,可设定字段类型，添加移除对象等功能
  */
 export declare class DataTable {
