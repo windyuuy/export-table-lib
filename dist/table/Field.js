@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Field = void 0;
+exports.Field = exports.TypeList = void 0;
 const FieldMeta_1 = require("./meta/FieldMeta");
+exports.TypeList = ["any", "number", "number[]", "bool", "bool[]", "string", "string[]", "object", "object[]", "key", "int", "int[]", "long", "long[]"];
 class Field {
     /**
      * 是否跳过该字段
@@ -24,6 +25,10 @@ class Field {
      * 类型名
      */
     type;
+    /**
+     * 配置的原始类型
+     */
+    rawType;
     /**
      * 是否唯一
      */
@@ -61,11 +66,12 @@ class Field {
     //翻译
     translate = false;
     meta;
-    constructor(name, describe, type) {
+    constructor(name, describe, type, rawType) {
         this.nameOrigin = name;
         this.name = name;
         this.describe = describe;
         this.type = type;
+        this.rawType = rawType;
     }
     get isFKField() {
         return this.fkTableNameOrigin != null;

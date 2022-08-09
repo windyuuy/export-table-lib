@@ -12,6 +12,9 @@ const toTypeValue = (v, t) => {
         else if (t == "number" || t == "uid") {
             return parseFloat(v);
         }
+        else if (t == "int" || t == "long") {
+            return parseInt(v);
+        }
         else if (t == "bool") {
             return !!v;
         }
@@ -111,12 +114,13 @@ class DataTable {
             }
             let des = String(this.sheet.data[0][i].value || "").trim();
             let name = String(this.sheet.data[1][i].value || "").trim();
-            let type = String(this.sheet.data[2][i].value || "").trim();
+            let rawType = String(this.sheet.data[2][i].value || "").trim();
+            let type = rawType;
             let fkTableName;
             let fkFieldName;
             let translate = false;
             if (type === "") {
-                let skip = new Field_1.Field(name || des, des || name, "any");
+                let skip = new Field_1.Field(name || des, des || name, "any", rawType);
                 skip.skip = true;
                 skip.skipOrigin = true;
                 skip.index = i;
@@ -125,7 +129,7 @@ class DataTable {
                 continue;
             }
             let isUnique = false;
-            let typeList = ["any", "number", "number[]", "bool", "bool[]", "string", "string[]", "object", "object[]", "key"];
+            let typeList = Field_1.TypeList;
             if (typeList.indexOf(type.toLowerCase()) != -1) {
                 //常规类型
             }
@@ -174,7 +178,7 @@ class DataTable {
                 //不支持的类型
                 type = "any";
             }
-            let field = new Field_1.Field(name, des, type.toLocaleLowerCase());
+            let field = new Field_1.Field(name, des, type.toLocaleLowerCase(), rawType);
             field.isUnique = isUnique;
             field.fkTableNameOrigin = fkTableName;
             field.fkFieldNameOrigin = fkFieldName;
@@ -219,17 +223,17 @@ class DataTable {
             }
             return newValue;
         }
-        else if (field.type == "number") {
+        else if (field.type == "number" || field.type == "int" || field.type == "long") {
             if (data == undefined || data === "")
                 data = 0;
             let newValue = parseFloat(data);
             if (isNaN(newValue)) {
                 newValue = 0;
-                console.error(chalk_1.default.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> number类型值填写错误 ${data}`));
+                console.error(chalk_1.default.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> ${field.type}类型值填写错误 ${data}`));
             }
             return newValue;
         }
-        else if (field.type == "number[]") {
+        else if (field.type == "number[]" || field.type == "int[]" || field.type == "long[]") {
             if (data == undefined || data === "" || data == "[]")
                 data = null;
             if (typeof data == "number") {
@@ -243,7 +247,7 @@ class DataTable {
                     let v = parseFloat(list[i]);
                     if (isNaN(v)) {
                         v = 0;
-                        console.error(chalk_1.default.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> number[]类型值填写错误 ${data}`));
+                        console.error(chalk_1.default.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> ${field.type}类型值填写错误 ${data}`));
                     }
                     result.push(v);
                 }
@@ -360,9 +364,17 @@ class DataTable {
             if (data === null || data === undefined || data === "" || data == "undefined") {
                 data = -1;
             }
-            else if (isNaN(parseInt(data))) {
-                if (this.getFKField(field)?.type == "number") {
-                    console.error(chalk_1.default.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> fk类型值填写错误 ${data}`));
+            else {
+                var fkType = this.getFKField(field)?.type;
+                if (fkType == "number") {
+                    if (isNaN(parseFloat(data))) {
+                        console.error(chalk_1.default.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> fk${fkType}类型值填写错误 ${data}`));
+                    }
+                }
+                else if (fkType == "int" || fkType == "long") {
+                    if (isNaN(parseInt(data))) {
+                        console.error(chalk_1.default.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> fk${fkType}类型值填写错误 ${data}`));
+                    }
                 }
             }
             return data;
