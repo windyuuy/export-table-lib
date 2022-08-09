@@ -2,7 +2,7 @@ import { Sheet } from "./Sheet";
 import { WorkbookManager } from "./WorkbookManager";
 import chalk from "chalk";
 import { Cell } from "./Cell";
-import { Field, FiledType } from "./Field";
+import { Field, FiledType, TypeList } from "./Field";
 import { SheetExtendMode, SheetMeta } from "./meta/SheetMeta";
 
 const toTypeValue = (v: any, t: FiledType) => {
@@ -118,13 +118,14 @@ export class DataTable {
 
             let des: string = String(this.sheet.data[0][i].value || "").trim()
             let name: string = String(this.sheet.data[1][i].value || "").trim()
-            let type: string = String(this.sheet.data[2][i].value || "").trim()
+            let rawType: string = String(this.sheet.data[2][i].value || "").trim()
+            let type = rawType
             let fkTableName: string | undefined
             let fkFieldName: string | undefined
             let translate: boolean = false;
 
             if (type === "") {
-                let skip = new Field(name || des, des || name, "any");
+                let skip = new Field(name || des, des || name, "any", rawType);
                 skip.skip = true;
                 skip.skipOrigin = true;
                 skip.index = i
@@ -134,7 +135,7 @@ export class DataTable {
             }
 
             let isUnique = false
-            let typeList = ["any", "number", "number[]", "bool", "bool[]", "string", "string[]", "object", "object[]", "key"]
+            let typeList = TypeList
             if (typeList.indexOf(type.toLowerCase()) != -1) {
                 //常规类型
             } else if (type.substr(0, 4).toLocaleLowerCase() == "fk[]") {//外键数组
@@ -179,7 +180,7 @@ export class DataTable {
                 //不支持的类型
                 type = "any"
             }
-            let field = new Field(name, des, type.toLocaleLowerCase() as any)
+            let field = new Field(name, des, type.toLocaleLowerCase() as any, rawType)
             field.isUnique = isUnique
             field.fkTableNameOrigin = fkTableName
             field.fkFieldNameOrigin = fkFieldName
