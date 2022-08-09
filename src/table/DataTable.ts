@@ -11,6 +11,8 @@ const toTypeValue = (v: any, t: FiledType) => {
             return `${v}`
         } else if (t == "number" || t == "uid") {
             return parseFloat(v)
+        } else if (t == "int" || t == "long") {
+            return parseInt(v)
         } else if (t == "bool") {
             return !!v
         } else {
@@ -229,16 +231,16 @@ export class DataTable {
                 console.error(chalk.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> uid类型值填写错误 ${data}`))
             }
             return newValue;
-        }else if(field.type=="number"){
+        } else if (field.type == "number" || field.type == "int" || field.type == "long") {
             if(data==undefined || data==="")
                 data=0;
             let newValue= parseFloat(data);
             if(isNaN(newValue)){
                 newValue=0;
-                console.error(chalk.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> number类型值填写错误 ${data}`))
+                console.error(chalk.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> ${field.type}类型值填写错误 ${data}`))
             }
             return newValue;
-        }else if(field.type=="number[]"){
+        } else if (field.type == "number[]" || field.type == "int[]" || field.type == "long[]") {
             if(data==undefined || data==="" || data=="[]")
                 data=null;
 
@@ -252,7 +254,7 @@ export class DataTable {
                     let v=parseFloat(list[i])
                     if(isNaN(v)){
                         v=0
-                        console.error(chalk.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> number[]类型值填写错误 ${data}`))
+                        console.error(chalk.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> ${field.type}类型值填写错误 ${data}`))
                     }
                     result.push(v)
                 }
@@ -349,11 +351,18 @@ export class DataTable {
                 return []
             }
         }else if(field.type=="fk"){
-            if(data===null||data===undefined||data===""||data=="undefined"){
-                data=-1;
-            }else if(isNaN(parseInt(data))){
-                if (this.getFKField(field)?.type == "number") {
-                    console.error(chalk.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> fk类型值填写错误 ${data}`))
+            if (data === null || data === undefined || data === "" || data == "undefined") {
+                data = -1;
+            } else {
+                var fkType = this.getFKField(field)?.type;
+                if (fkType == "number") {
+                    if (isNaN(parseFloat(data))) {
+                        console.error(chalk.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> fk${fkType}类型值填写错误 ${data}`))
+                    }
+                } else if (fkType == "int" || fkType == "long") {
+                    if (isNaN(parseInt(data))) {
+                        console.error(chalk.red(`表${this.nameOrigin} 行${lineNumber} 字段<${field.nameOrigin}> fk${fkType}类型值填写错误 ${data}`))
+                    }
                 }
             }
             return data

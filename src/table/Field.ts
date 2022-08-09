@@ -1,8 +1,8 @@
 import { DataTable } from "./DataTable";
 import { FieldExtendMode, FieldMeta } from "./meta/FieldMeta";
 
-export type FiledType = "any" | "uid" | "number" | "number[]" | "bool" | "bool[]" | "string" | "object" | "object[]" | "fk" | "string*" | "string[]" | "key" | "fk[]"
-export const TypeList = ["any", "number", "number[]", "bool", "bool[]", "string", "string[]", "object", "object[]", "key"]
+export type FiledType = "any" | "uid" | "number" | "number[]" | "bool" | "bool[]" | "string" | "object" | "object[]" | "fk" | "string*" | "string[]" | "key" | "fk[]" | "int" | "int[]" | "long" | "long[]"
+export const TypeList = ["any", "number", "number[]", "bool", "bool[]", "string", "string[]", "object", "object[]", "key", "int", "int[]", "long", "long[]"]
 
 
 export class Field {
