@@ -6,6 +6,8 @@ export declare function builder(yargs: typeof import("yargs")): import("yargs").
 } & {
     to: string | undefined;
 } & {
+    tagoutpaths: (string | number)[] | undefined;
+} & {
     tags: (string | number)[] | undefined;
 } & {
     t: (string | number)[] | undefined;

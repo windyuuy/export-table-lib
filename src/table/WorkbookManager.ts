@@ -67,9 +67,12 @@ export class WorkbookManager {
 
     protected async buildExcel(excel:string){
         var promise=new Promise<void>((resolve, reject)=>{
-
-            fs.readFile(excel,(err,buffer)=>{
+            let t1 = Date.now();
+            fs.readFile(excel, (err, buffer) => {
+                let t2 = Date.now();
                 if(err){
+                    let t3 = Date.now();
+                    console.error(chalk.red(`load excel<${excel}> failed, timecost: ${t2 - t1}, ${t3 - t2}`))
                     console.error(chalk.red(String(err)))
                     resolve();
                     return;
@@ -77,6 +80,8 @@ export class WorkbookManager {
                 let workbook=new Workbook()
                 workbook.load(excel,buffer)
                 this._list.push(workbook);
+                let t4 = Date.now();
+                console.log(`load excel<${excel}> done, timecost: ${t2 - t1}, ${t4 - t2}`)
                 resolve();
             });
 

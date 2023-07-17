@@ -67,7 +67,12 @@ export class Workbook {
     load(filepath:string,buff:Buffer){
         this.filepath=filepath;
 
-        const workBook = xlsx.read(buff, {});
+        const workBook = xlsx.read(buff, {
+            cellFormula: false,
+            cellHTML: false,
+            cellNF: false,
+            cellText: false,
+        });
         let sheetNames = Object.keys(workBook.Sheets);
 
         let validSheetNames = sheetNames.filter(sheetName => !sheetName.endsWith(".meta"))

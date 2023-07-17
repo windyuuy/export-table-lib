@@ -13,6 +13,7 @@ function builder(yargs) {
     return yargs
         .string("from")
         .string("to")
+        .array("tagoutpaths").describe("tagoutpaths", "各tag对应路径")
         .array("tags").alias("t", "tags").describe("tag", "导出单张表格的模板")
         .array("inject").describe("inject", "注入到模板中的boolean形变量，可以间接控制模板功能")
         .string("packagename").describe("packagename", "包名称")
@@ -53,6 +54,7 @@ async function handler(argv) {
     let from = argv.from;
     let toRoot = argv.to;
     let tags = argv.tags;
+    let tagoutpaths = argv.tagoutpaths;
     let inject = argv.inject || [];
     let packagename = argv.packagename;
     let tableNameFirstLetterUpper = argv.tableNameFirstLetterUpper;
@@ -68,13 +70,28 @@ async function handler(argv) {
     let workbookManager = new WorkbookManager_1.WorkbookManager();
     // 暂时只需要支持一个
     workbookManager.meta.scenes = scenes.concat();
+    let tLoad1 = Date.now();
     await workbookManager.build(from, recursive); //加载所有表
-    const runExport = (scene, needInjectSceneFolder) => {
+    let tLoad2 = Date.now();
+    console.log(`load workbook timecost: ${tLoad2 - tLoad1}`);
+    const getToRoot = (toRoot, scene, needInjectSceneFolder) => {
         let to = toRoot;
         if (scene) {
             if (needInjectSceneFolder) {
                 to = (0, path_1.join)(toRoot, scene);
             }
+        }
+        return to;
+    };
+    const runExport = (scene, needInjectSceneFolder) => {
+        // let to = toRoot
+        // if (scene) {
+        //     if (needInjectSceneFolder) {
+        //         to = join(toRoot, scene)
+        //     }
+        // }
+        let to = getToRoot(toRoot, scene, needInjectSceneFolder);
+        if (scene) {
             // 应用场景配置
             workbookManager.applySceneConfig(scene);
         }
@@ -85,9 +102,15 @@ async function handler(argv) {
             console.error(chalk_1.default.red("no tag of plugins to run with !!"));
             return;
         }
-        for (let psc of pscs) {
+        // for (let psc of pscs) {
+        for (let i = 0; i < pscs.length; i++) {
+            let psc = pscs[i];
             let ps = psc.split(":");
             let tag = ps[1];
+            if (tagoutpaths != null && tagoutpaths.length > i) {
+                let tagOutPath = tagoutpaths[i];
+                to = getToRoot(tagOutPath, scene, needInjectSceneFolder);
+            }
             let pluginName = ps[0];
             let pluginFullName = "export-table-pulgin-" + pluginName;
             let plugin = ImportFailed;
@@ -109,7 +132,7 @@ async function handler(argv) {
                 }
             }
             if (plugin == ImportFailed) {
-                console.error(`plugin not found: <${pluginName}>`);
+                console.error(chalk_1.default.red(`plugin not found: <${pluginName}>`));
                 return;
             }
             let exportPlugins = plugin.ExportPlugins;
@@ -119,6 +142,7 @@ async function handler(argv) {
             {
                 //导出每张表
                 console.log(`> handle sheets begin`);
+                let t1 = Date.now();
                 let tables = workbookManager.dataTables;
                 for (let table of tables) {
                     if (tableNameFirstLetterUpper) {
@@ -142,11 +166,15 @@ async function handler(argv) {
                         };
                         matchedPlugins.forEach(plugin => {
                             console.log(`>>> - handle sheet <${table.nameOrigin}> with [${plugin.name}]`);
+                            let t1_1 = Date.now();
                             plugin.handleSheet(paras);
+                            let t2_1 = Date.now();
+                            console.log(`>>> - handle sheet <${table.nameOrigin}> with [${plugin.name}] done, timecost: ${t2_1 - t1_1}`);
                         });
                     }
                 }
-                console.log(`> handle sheets done`);
+                let t2 = Date.now();
+                console.log(`> handle sheets done, timecost: ${t2 - t1}`);
             }
             {
                 let tables = workbookManager.dataTables;
@@ -159,11 +187,16 @@ async function handler(argv) {
                     outPath: to,
                 };
                 console.log(`> handle batch begin`);
+                let t1 = Date.now();
                 matchedPlugins.forEach(plugin => {
                     console.log(`>> - handle batch with [${plugin.name}]`);
+                    let t1_1 = Date.now();
                     plugin.handleBatch(paras);
+                    let t2_1 = Date.now();
+                    console.log(`>> - handle batch with [${plugin.name}] done, timecost: ${t2_1 - t1_1}`);
                 });
-                console.log(`> handle batch done`);
+                let t2 = Date.now();
+                console.log(`> handle batch done, timecost: ${t2 - t1}`);
             }
         }
     };
