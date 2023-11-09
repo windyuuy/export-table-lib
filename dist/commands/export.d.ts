@@ -1,10 +1,14 @@
 /// <reference types="yargs" />
 export declare var command: string;
 export declare var describe: string;
-export declare function builder(yargs: typeof import("yargs")): import("yargs").Argv<import("yargs").Omit<{
+export declare function builder(yargs: typeof import("yargs")): import("yargs").Argv<import("yargs").Omit<import("yargs").Omit<{
     from: string | undefined;
 } & {
     to: string | undefined;
+} & {
+    namespace: string | undefined;
+}, "namespace"> & {
+    namespace: string;
 } & {
     tagoutpaths: (string | number)[] | undefined;
 } & {

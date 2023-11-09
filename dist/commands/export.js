@@ -13,6 +13,7 @@ function builder(yargs) {
     return yargs
         .string("from")
         .string("to")
+        .string("namespace").describe("namespace", "命名空间").default("namespace", "MEEC.ExportedConfigs")
         .array("tagoutpaths").describe("tagoutpaths", "各tag对应路径")
         .array("tags").alias("t", "tags").describe("tag", "导出单张表格的模板")
         .array("inject").describe("inject", "注入到模板中的boolean形变量，可以间接控制模板功能")
@@ -62,6 +63,8 @@ async function handler(argv) {
     let scenes = argv.scenes || [];
     let verbose = argv.verbose ?? false;
     let recursive = argv.recursive ?? false;
+    let moreOptions = argv.moreOptions ?? process.argv;
+    let exportNamespace = argv.namespace;
     let injectMap = {};
     for (let k of inject) {
         injectMap[k] = true;
@@ -163,6 +166,8 @@ async function handler(argv) {
                             packagename: packagename,
                             outPath: to,
                             outFilePath: new OutFilePath_1.OutFilePath(to, table.fullName, "." + tag),
+                            exportNamespace: exportNamespace,
+                            moreOptions,
                         };
                         matchedPlugins.forEach(plugin => {
                             console.log(`>>> - handle sheet <${table.nameOrigin}> with [${plugin.name}]`);
@@ -185,6 +190,8 @@ async function handler(argv) {
                     inject: injectMap,
                     packagename: packagename,
                     outPath: to,
+                    exportNamespace: exportNamespace,
+                    moreOptions,
                 };
                 console.log(`> handle batch begin`);
                 let t1 = Date.now();

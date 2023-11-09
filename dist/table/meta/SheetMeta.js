@@ -9,7 +9,7 @@ var SheetExtendMode;
 (function (SheetExtendMode) {
     SheetExtendMode["Sub"] = "-";
     SheetExtendMode["Add"] = "+";
-})(SheetExtendMode = exports.SheetExtendMode || (exports.SheetExtendMode = {}));
+})(SheetExtendMode || (exports.SheetExtendMode = SheetExtendMode = {}));
 class SheetMeta {
     data;
     name;

@@ -9,7 +9,7 @@ var FieldExtendMode;
 (function (FieldExtendMode) {
     FieldExtendMode["Sub"] = "-";
     FieldExtendMode["Add"] = "+";
-})(FieldExtendMode = exports.FieldExtendMode || (exports.FieldExtendMode = {}));
+})(FieldExtendMode || (exports.FieldExtendMode = FieldExtendMode = {}));
 class FieldMeta {
     data;
     /**

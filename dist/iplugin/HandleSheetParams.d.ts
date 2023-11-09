@@ -1,7 +1,7 @@
 import { DataTable, WorkbookManager } from "..";
 import { Field } from "../table/Field";
 import { OutFilePath } from "./OutFilePath";
-export declare type HandleSheetParams = {
+export type HandleSheetParams = {
     /**
      * 当前sheet名
      */
@@ -50,4 +50,14 @@ export declare type HandleSheetParams = {
      * 文件导出路径
      */
     outFilePath: OutFilePath;
+    /**
+     * 导出命名空间
+     */
+    exportNamespace: string;
+    /**
+     * 更多选项
+     */
+    moreOptions: {
+        [key: string]: any;
+    };
 };

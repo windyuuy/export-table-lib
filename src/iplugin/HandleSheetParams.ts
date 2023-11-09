@@ -51,4 +51,14 @@ export type HandleSheetParams = {
 	 * 文件导出路径
 	 */
 	outFilePath: OutFilePath
+
+	/**
+	 * 导出命名空间
+	 */
+	exportNamespace: string
+	
+	/**
+	 * 更多选项
+	 */
+	moreOptions: { [key: string]: any }
 };

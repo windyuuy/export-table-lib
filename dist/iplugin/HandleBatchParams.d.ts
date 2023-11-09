@@ -1,5 +1,5 @@
 import { DataTable, WorkbookManager } from "..";
-export declare type HandleBatchParams = {
+export type HandleBatchParams = {
     /**
      * 工作簿管理器
      */
@@ -20,4 +20,14 @@ export declare type HandleBatchParams = {
      * 导出路径
      */
     outPath: string;
+    /**
+     * 导出命名空间
+     */
+    exportNamespace: string;
+    /**
+     * 更多选项
+     */
+    moreOptions: {
+        [key: string]: any;
+    };
 };

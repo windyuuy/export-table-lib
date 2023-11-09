@@ -8,7 +8,7 @@ var WorkbookExtendMode;
 (function (WorkbookExtendMode) {
     WorkbookExtendMode["Sub"] = "-";
     WorkbookExtendMode["Add"] = "+";
-})(WorkbookExtendMode = exports.WorkbookExtendMode || (exports.WorkbookExtendMode = {}));
+})(WorkbookExtendMode || (exports.WorkbookExtendMode = WorkbookExtendMode = {}));
 class WorkbookMeta {
     name;
     workbook;

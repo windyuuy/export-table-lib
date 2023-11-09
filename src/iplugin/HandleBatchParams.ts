@@ -22,4 +22,14 @@ export type HandleBatchParams = {
 	 * 导出路径
 	 */
 	outPath: string
+
+	/**
+	 * 导出命名空间
+	 */
+	exportNamespace: string
+	
+	/**
+	 * 更多选项
+	 */
+	moreOptions: { [key: string]: any }
 };

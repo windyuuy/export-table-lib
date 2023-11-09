@@ -1,6 +1,6 @@
 import { DataTable } from "./DataTable";
 import { FieldMeta } from "./meta/FieldMeta";
-export declare type FiledType = "any" | "uid" | "number" | "number[]" | "bool" | "bool[]" | "string" | "object" | "object[]" | "fk" | "string*" | "string[]" | "key" | "fk[]" | "int" | "int[]" | "long" | "long[]";
+export type FiledType = "any" | "uid" | "number" | "number[]" | "bool" | "bool[]" | "string" | "object" | "object[]" | "fk" | "string*" | "string[]" | "key" | "fk[]" | "int" | "int[]" | "long" | "long[]";
 export declare const TypeList: string[];
 export declare class Field {
     /**
