@@ -68,14 +68,14 @@ class DataTable {
     }
     name;
     constructor(
-    /**
-     * 当前操作的数据页
-     */
-    sheet, 
-    /**
-     * 表名
-     */
-    nameOrigin) {
+        /**
+         * 当前操作的数据页
+         */
+        sheet,
+        /**
+         * 表名
+         */
+        nameOrigin) {
         this.sheet = sheet;
         this.nameOrigin = nameOrigin;
         this.name = nameOrigin;
@@ -153,6 +153,10 @@ class DataTable {
             let typeList = Field_1.TypeList;
             if (typeList.indexOf(type.toLowerCase()) != -1) {
                 //常规类型
+            }
+            else if (type.startsWith("@")) {
+                // extend custom type outside, like @(int,number)[]
+                type = "string";
             }
             else if (type.substr(0, 4).toLocaleLowerCase() == "fk[]") { //外键数组
                 //外键数组

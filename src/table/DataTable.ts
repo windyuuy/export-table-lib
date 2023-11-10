@@ -2,7 +2,7 @@ import { Sheet } from "./Sheet";
 import { WorkbookManager } from "./WorkbookManager";
 import chalk from "chalk";
 import { Cell } from "./Cell";
-import { Field, FiledType, TypeList } from "./Field";
+import { Field, FieldType, TypeList } from "./Field";
 import { SheetExtendMode, SheetMeta } from "./meta/SheetMeta";
 
 /**
@@ -24,7 +24,7 @@ export const strictParseInt = (n: any) => {
     }
 }
 
-const toTypeValue = (v: any, t: FiledType) => {
+const toTypeValue = (v: any, t: FieldType) => {
     if (typeof (v) != t) {
         if (t == "string" || t == "key" || t == "string*") {
             return `${v}`
@@ -159,6 +159,9 @@ export class DataTable {
             let typeList = TypeList
             if (typeList.indexOf(type.toLowerCase()) != -1) {
                 //常规类型
+            } else if(type.startsWith("@")) {
+                // extend custom type outside, like @(int,number)[]
+                type = "string"
             } else if (type.substr(0, 4).toLocaleLowerCase() == "fk[]") {//外键数组
                 //外键数组
                 let param = type.split(/\s+/)

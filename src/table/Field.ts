@@ -1,7 +1,7 @@
 import { DataTable } from "./DataTable";
 import { FieldExtendMode, FieldMeta } from "./meta/FieldMeta";
 
-export type FiledType = "any" | "uid" | "number" | "number[]" | "bool" | "bool[]" | "string" | "object" | "object[]" | "fk" | "string*" | "string[]" | "key" | "fk[]" | "int" | "int[]" | "long" | "long[]"
+export type FieldType = "any" | "uid" | "number" | "number[]" | "bool" | "bool[]" | "string" | "object" | "object[]" | "fk" | "string*" | "string[]" | "key" | "fk[]" | "int" | "int[]" | "long" | "long[]"
 export const TypeList = ["any", "number", "number[]", "bool", "bool[]", "string", "string[]", "object", "object[]", "key", "int", "int[]", "long", "long[]"]
 
 
@@ -27,7 +27,7 @@ export class Field {
 	/**
 	 * 类型名
 	 */
-	type: FiledType;
+	type: FieldType;
 
 	/**
 	 * 配置的原始类型
@@ -78,7 +78,7 @@ export class Field {
 
 	meta?: FieldMeta
 
-	constructor(name: string, describe: string, type: FiledType, rawType: string) {
+	constructor(name: string, describe: string, type: FieldType, rawType: string) {
 		this.nameOrigin = name;
 		this.name = name
 		this.describe = describe;

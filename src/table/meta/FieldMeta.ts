@@ -1,4 +1,4 @@
-import { Field, FiledType } from "../Field"
+import { Field, FieldType } from "../Field"
 import { CustomFieldMeta } from "./CustomFieldMeta"
 
 /**
@@ -13,7 +13,7 @@ export class FieldMeta {
 	/**
 	 * 导出类型
 	 */
-	type?: FiledType
+	type?: FieldType
 	/**
 	 * 导出名称
 	 */
@@ -50,7 +50,7 @@ export class FieldMeta {
 		let fieldName = m[4]
 		this.name = fieldName
 		this.exportName = exportName
-		this.type = type as FiledType
+		this.type = type as FieldType
 		this.extendMode = sign == "-" ? FieldExtendMode.Sub : FieldExtendMode.Add
 	}
 }

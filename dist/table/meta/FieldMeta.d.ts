@@ -1,4 +1,4 @@
-import { FiledType } from "../Field";
+import { FieldType } from "../Field";
 import { CustomFieldMeta } from "./CustomFieldMeta";
 /**
  * 继承模式
@@ -15,7 +15,7 @@ export declare class FieldMeta {
     /**
      * 导出类型
      */
-    type?: FiledType;
+    type?: FieldType;
     /**
      * 导出名称
      */
