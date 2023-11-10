@@ -30,7 +30,7 @@ const toTypeValue = (v, t) => {
         if (t == "string" || t == "key" || t == "string*") {
             return `${v}`;
         }
-        else if (t == "number" || t == "uid") {
+        else if (t == "number" || t == "float" || t == "uid") {
             return parseFloat(v);
         }
         else if (t == "int" || t == "long") {
@@ -68,14 +68,14 @@ class DataTable {
     }
     name;
     constructor(
-        /**
-         * 当前操作的数据页
-         */
-        sheet,
-        /**
-         * 表名
-         */
-        nameOrigin) {
+    /**
+     * 当前操作的数据页
+     */
+    sheet, 
+    /**
+     * 表名
+     */
+    nameOrigin) {
         this.sheet = sheet;
         this.nameOrigin = nameOrigin;
         this.name = nameOrigin;
@@ -248,7 +248,7 @@ class DataTable {
             }
             return newValue;
         }
-        else if (field.type == "number") {
+        else if (field.type == "number" || field.type == "float") {
             if (data == undefined || data === "")
                 data = 0;
             let newValue = parseFloat(data);
@@ -425,7 +425,7 @@ class DataTable {
             }
             else {
                 var fkType = this.getFKField(field)?.type;
-                if (fkType == "number") {
+                if (fkType == "number" || fkType == "float") {
                     if (isNaN(parseFloat(data))) {
                         console.error(chalk_1.default.red(`表${this.fullName} 行${lineNumber} 字段<${field.nameOrigin}> fk${fkType}类型值填写错误 ${data}`));
                     }

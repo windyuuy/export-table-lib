@@ -28,7 +28,7 @@ const toTypeValue = (v: any, t: FieldType) => {
     if (typeof (v) != t) {
         if (t == "string" || t == "key" || t == "string*") {
             return `${v}`
-        } else if (t == "number" || t == "uid") {
+        } else if (t == "number" || t == "float" || t == "uid") {
             return parseFloat(v)
         } else if (t == "int" || t == "long") {
             return strictParseInt(v)
@@ -253,7 +253,7 @@ export class DataTable {
                 console.error(chalk.red(`表${this.fullName} 行${lineNumber} 字段<${field.nameOrigin}> ${field.type}类型值填写错误 ${data}`))
             }
             return newValue;
-        } else if (field.type == "number") {
+        } else if (field.type == "number" || field.type == "float") {
             if(data==undefined || data==="")
                 data=0;
             let newValue= parseFloat(data);
@@ -408,7 +408,7 @@ export class DataTable {
                 data = -1;
             } else {
                 var fkType = this.getFKField(field)?.type;
-                if (fkType == "number") {
+                if (fkType == "number" || fkType == "float") {
                     if (isNaN(parseFloat(data))) {
                         console.error(chalk.red(`表${this.fullName} 行${lineNumber} 字段<${field.nameOrigin}> fk${fkType}类型值填写错误 ${data}`))
                     }
