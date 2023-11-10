@@ -271,7 +271,7 @@ export class DataTable {
                 console.error(chalk.red(`表${this.fullName} 行${lineNumber} 字段<${field.nameOrigin}> ${field.type}类型值填写错误 ${data}`))
             }
             return newValue;
-        } else if (field.type == "number[]") {
+        } else if (field.type == "number[]" || field.type == "float[]") {
             if(data==undefined || data==="" || data=="[]")
                 data=null;
 

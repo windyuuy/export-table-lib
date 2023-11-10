@@ -268,7 +268,7 @@ class DataTable {
             }
             return newValue;
         }
-        else if (field.type == "number[]") {
+        else if (field.type == "number[]" || field.type == "float[]") {
             if (data == undefined || data === "" || data == "[]")
                 data = null;
             if (typeof data == "number") {

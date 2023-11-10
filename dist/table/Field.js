@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Field = exports.TypeList = void 0;
 const FieldMeta_1 = require("./meta/FieldMeta");
-exports.TypeList = ["any", "number", "number[]", "bool", "bool[]", "string", "string[]", "object", "object[]", "key", "int", "int[]", "long", "long[]", "float"];
+exports.TypeList = ["any", "number", "number[]", "bool", "bool[]", "string", "string[]", "object", "object[]", "key", "int", "int[]", "long", "long[]", "float", "float[]"];
 class Field {
     /**
      * 是否跳过该字段
