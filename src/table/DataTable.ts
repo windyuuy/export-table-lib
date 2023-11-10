@@ -452,6 +452,8 @@ export class DataTable {
             }else{
                 return [];
             }
+        } else {
+            console.error(chalk.red(`可能不受支持的数据类型: ${field.rawType} -> ${field.type}`))
         }
     }
 

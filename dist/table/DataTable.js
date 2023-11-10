@@ -474,6 +474,9 @@ class DataTable {
                 return [];
             }
         }
+        else {
+            console.error(chalk_1.default.red(`可能不受支持的数据类型: ${field.rawType} -> ${field.type}`));
+        }
     }
     _dataList;
     get dataList() {
