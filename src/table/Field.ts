@@ -26,6 +26,11 @@ export class Field {
 	describe: string;
 	/**
 	 * 类型名
+	 * - 特殊类型说明：如果类型声明以 @ 符号开头，那么此 type 判定为 string，可通过 rawType 字段细分转换，通过此方式支持插件中实现或临时实现 export-table-lib 中未受支持的新增类型
+	 * 	- 后续如果 export-table-lib 中直接支持规范化解析该特殊类型，那么类型声明可去除 @ 开头，而落地到配表阶段，则可以等所有相关配表插件（比如导出c#和lua的插件）全都跟进升级之后，再去除 @ 开头，这样便于兼容升级
+	 * 	- 举例：
+	 * 		- 配表中声明新类型 @(int,int)[], 那么在插件中处理时，type 为 string, rawType 为 "@(int,int)[]"，csharp导表插件和lua导表插件中，可通过 rawType 判断是特殊的新增类型，从而细分转换
+	 * 		- 在export-table-lib 中直接支持规范化解析该特殊类型后，并且 csharp导表插件和lua导表插件都跟进升级之后，可同时支持 (int,int)[] 和 @(int,int)[] 类型声明
 	 */
 	type: FieldType;
 
