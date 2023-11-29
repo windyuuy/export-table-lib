@@ -146,6 +146,7 @@ export async function handler(argv: any) {
             }
             if (plugin == ImportFailed) {
                 console.error(chalk.red(`plugin not found: <${pluginName}>`))
+                console.error("请确认插件目录名是否以 export-table-pulgin-${PluginName} 的格式命名")
                 return;
             }
             let exportPlugins: IPlugin[] = (plugin as TPlugin).ExportPlugins

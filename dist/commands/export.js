@@ -136,6 +136,7 @@ async function handler(argv) {
             }
             if (plugin == ImportFailed) {
                 console.error(chalk_1.default.red(`plugin not found: <${pluginName}>`));
+                console.error("请确认插件目录名是否以 export-table-pulgin-${PluginName} 的格式命名");
                 return;
             }
             let exportPlugins = plugin.ExportPlugins;
