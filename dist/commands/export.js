@@ -136,7 +136,7 @@ async function handler(argv) {
             }
             if (plugin == ImportFailed) {
                 console.error(chalk_1.default.red(`plugin not found: <${pluginName}>`));
-                console.error("请确认插件目录名是否以 export-table-pulgin-${PluginName} 的格式命名");
+                console.error("请确认插件目录名是否以 export-table-pulgin-${PluginName} 的格式命名；或者如果插件未以npm_module形式安装，需要在传入参数中指定传参 --libs ${插件目录的上一级目录}。");
                 return;
             }
             let exportPlugins = plugin.ExportPlugins;
