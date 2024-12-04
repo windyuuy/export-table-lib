@@ -9,14 +9,14 @@ import { OutFilePath } from "../iplugin/OutFilePath";
 import chalk from "chalk";
 
 export var command = 'export <from> <to>'
- 
-export var describe = '导出表格，可以每张表格单独导出，或是全部数据一起导出。' 
- 
-export function builder(yargs:typeof import("yargs")) {
+
+export var describe = '导出表格，可以每张表格单独导出，或是全部数据一起导出。'
+
+export function builder(yargs: typeof import("yargs")) {
     return yargs
         .string("from")
         .string("to")
-        .string("namespace").describe("namespace","命名空间").default("namespace","MEEC.ExportedConfigs")
+        .string("namespace").describe("namespace", "命名空间").default("namespace", "MyGame.ExportedConfigs")
         .array("tagoutpaths").describe("tagoutpaths", "各tag对应路径")
         .array("tags").alias("t", "tags").describe("tag", "导出单张表格的模板")
         .array("inject").describe("inject", "注入到模板中的boolean形变量，可以间接控制模板功能")
@@ -30,18 +30,18 @@ export function builder(yargs:typeof import("yargs")) {
         .help("h")
 }
 
-function encrypt(str:string,key:string,deflate:boolean){
+function encrypt(str: string, key: string, deflate: boolean) {
     //先压缩再加密
-    if(deflate){
-        let deflateValue= pako.deflate(str);
-        return xxtea.encryptToString(deflateValue,key);    
-    }else{
-        return xxtea.encryptToString(str,key);
+    if (deflate) {
+        let deflateValue = pako.deflate(str);
+        return xxtea.encryptToString(deflateValue, key);
+    } else {
+        return xxtea.encryptToString(str, key);
     }
 }
 
-function firstLetterUpper(str:string){
-    return str.charAt(0).toUpperCase()+str.slice(1);
+function firstLetterUpper(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
 let ImportFailed = Symbol("FailedImport")
@@ -182,6 +182,7 @@ export async function handler(argv: any) {
                             outFilePath: new OutFilePath(to, table.fullName, "." + tag),
                             exportNamespace: exportNamespace,
                             moreOptions,
+                            allTags: pscs,
                         }
                         matchedPlugins.forEach(plugin => {
                             console.log(`>>> - handle sheet <${table.nameOrigin}> with [${plugin.name}]`)
@@ -207,6 +208,7 @@ export async function handler(argv: any) {
                     outPath: to,
                     exportNamespace: exportNamespace,
                     moreOptions,
+                    allTags: pscs,
                 }
                 console.log(`> handle batch begin`)
                 let t1 = Date.now();

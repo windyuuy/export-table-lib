@@ -13,7 +13,7 @@ function builder(yargs) {
     return yargs
         .string("from")
         .string("to")
-        .string("namespace").describe("namespace", "命名空间").default("namespace", "MEEC.ExportedConfigs")
+        .string("namespace").describe("namespace", "命名空间").default("namespace", "MyGame.ExportedConfigs")
         .array("tagoutpaths").describe("tagoutpaths", "各tag对应路径")
         .array("tags").alias("t", "tags").describe("tag", "导出单张表格的模板")
         .array("inject").describe("inject", "注入到模板中的boolean形变量，可以间接控制模板功能")
@@ -169,6 +169,7 @@ async function handler(argv) {
                             outFilePath: new OutFilePath_1.OutFilePath(to, table.fullName, "." + tag),
                             exportNamespace: exportNamespace,
                             moreOptions,
+                            allTags: pscs,
                         };
                         matchedPlugins.forEach(plugin => {
                             console.log(`>>> - handle sheet <${table.nameOrigin}> with [${plugin.name}]`);
@@ -193,6 +194,7 @@ async function handler(argv) {
                     outPath: to,
                     exportNamespace: exportNamespace,
                     moreOptions,
+                    allTags: pscs,
                 };
                 console.log(`> handle batch begin`);
                 let t1 = Date.now();

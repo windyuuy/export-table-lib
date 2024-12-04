@@ -32,4 +32,9 @@ export type HandleBatchParams = {
 	 * 更多选项
 	 */
 	moreOptions: { [key: string]: any }
+	
+	/**
+	 * 当前所有标签
+	 */
+	allTags:string[]
 };

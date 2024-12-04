@@ -30,4 +30,8 @@ export type HandleBatchParams = {
     moreOptions: {
         [key: string]: any;
     };
+    /**
+     * 当前所有标签
+     */
+    allTags: string[];
 };
