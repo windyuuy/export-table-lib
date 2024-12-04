@@ -45,7 +45,7 @@ function foreach(ls, f, sign = "\n", autoTrim = true) {
             }
         }
         return sl;
-    }).join(sign);
+    }).filter(line => line != "").join(sign);
     return line;
 }
 exports.foreach = foreach;
@@ -54,7 +54,7 @@ class Cond {
     finished = false;
     iff(cond, call) {
         if (this.finished) {
-            return;
+            return this;
         }
         if (cond) {
             this.finished = true;
@@ -65,7 +65,7 @@ class Cond {
     }
     elseif(cond, call) {
         if (this.finished) {
-            return;
+            return this;
         }
         if (cond) {
             this.finished = true;
@@ -76,7 +76,7 @@ class Cond {
     }
     else(call) {
         if (this.finished) {
-            return;
+            return this;
         }
         this.finished = true;
         let str = call(this);

@@ -41,7 +41,7 @@ export function foreach<T>(ls: T[], f: (e: T) => string, sign: string = "\n", au
 			}
 		}
 		return sl
-	}).join(sign)
+	}).filter(line => line != "").join(sign)
 	return line
 }
 
@@ -50,7 +50,7 @@ export class Cond {
 	protected finished: boolean = false
 	iff(cond: boolean, call: (cond: Cond) => string) {
 		if (this.finished) {
-			return
+			return this
 		}
 		if (cond) {
 			this.finished = true
@@ -62,7 +62,7 @@ export class Cond {
 
 	elseif(cond: boolean, call: (cond: Cond) => string) {
 		if (this.finished) {
-			return
+			return this
 		}
 		if (cond) {
 			this.finished = true
@@ -74,7 +74,7 @@ export class Cond {
 
 	else(call: (cond: Cond) => string) {
 		if (this.finished) {
-			return
+			return this
 		}
 		this.finished = true
 		let str = call(this)
