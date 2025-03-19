@@ -47,7 +47,7 @@ const toTypeValue = (v: any, t: FieldType) => {
  */
 export class DataTable {
 
-    manager:WorkbookManager|null=null;
+    manager: WorkbookManager | null = null;
 
     /**
      * 工作簿名
@@ -69,13 +69,13 @@ export class DataTable {
         /**
          * 当前操作的数据页
          */
-        public sheet:Sheet,
+        public sheet: Sheet,
 
         /**
          * 表名
          */
         public nameOrigin: string
-        ){
+    ) {
         this.name = nameOrigin
     }
 
@@ -117,8 +117,8 @@ export class DataTable {
         }
     }
 
-    isNullCell(cell:Cell|null){
-        if(cell==null || cell.value==null || String(cell.value).trim()==""){
+    isNullCell(cell: Cell | null) {
+        if (cell == null || cell.value == null || String(cell.value).trim() == "") {
             return true;
         }
         return false;
@@ -166,7 +166,7 @@ export class DataTable {
             let typeList = TypeList
             if (typeList.indexOf(type.toLowerCase()) != -1) {
                 //常规类型
-            } else if(type.startsWith("@")) {
+            } else if (type.startsWith("@")) {
                 // extend custom type outside, like @(int,number)[]
                 type = "string"
             } else if (type.substr(0, 4).toLocaleLowerCase() == "fk[]") {//外键数组
@@ -248,24 +248,24 @@ export class DataTable {
         return this.fields?.filter(f => f.skip == false) ?? null
     }
 
-    
-    protected getNewData(field:Field,data:any,lineNumber:number):any{
-        if(field.type=="any"){
+
+    protected getNewData(field: Field, data: any, lineNumber: number): any {
+        if (field.type == "any") {
             //any不做任何处理
             return data
-        }else if(field.type=="uid"){
+        } else if (field.type == "uid") {
             let newValue = parseFloat(data);
-            if(isNaN(newValue)){
-                newValue=0;
+            if (isNaN(newValue)) {
+                newValue = 0;
                 console.error(chalk.red(`表${this.fullName} 行${lineNumber} 字段<${field.nameOrigin}> ${field.type}类型值填写错误 ${data}`))
             }
             return newValue;
         } else if (field.type == "number" || field.type == "float") {
-            if(data==undefined || data==="")
-                data=0;
-            let newValue= parseFloat(data);
-            if(isNaN(newValue)){
-                newValue=0;
+            if (data == undefined || data === "")
+                data = 0;
+            let newValue = parseFloat(data);
+            if (isNaN(newValue)) {
+                newValue = 0;
                 console.error(chalk.red(`表${this.fullName} 行${lineNumber} 字段<${field.nameOrigin}> ${field.type}类型值填写错误 ${data}`))
             }
             return newValue;
@@ -279,25 +279,25 @@ export class DataTable {
             }
             return newValue;
         } else if (field.type == "number[]" || field.type == "float[]") {
-            if(data==undefined || data==="" || data=="[]")
-                data=null;
+            if (data == undefined || data === "" || data == "[]")
+                data = null;
 
-            if(typeof data=="number"){
+            if (typeof data == "number") {
                 return [data];
-            }else if(typeof data=="string"){
-                data=data.replace(/\[|\]/g,"");
-                let list=data.split(/,|;/)
-                let result=[]
-                for(let i=0;i<list.length;i++){
-                    let v=parseFloat(list[i])
-                    if(isNaN(v)){
-                        v=0
+            } else if (typeof data == "string") {
+                data = data.replace(/\[|\]/g, "");
+                let list = data.split(/,|;/)
+                let result = []
+                for (let i = 0; i < list.length; i++) {
+                    let v = parseFloat(list[i])
+                    if (isNaN(v)) {
+                        v = 0
                         console.error(chalk.red(`表${this.fullName} 行${lineNumber} 字段<${field.nameOrigin}> ${field.type}类型值填写错误 ${data}`))
                     }
                     result.push(v)
                 }
                 return result;
-            }else{
+            } else {
                 return [];
             }
         } else if (field.type == "int[]" || field.type == "long[]") {
@@ -322,95 +322,95 @@ export class DataTable {
             } else {
                 return [];
             }
-        }else if(field.type=="bool"){
-            if(data==undefined || data==="")
-                data=false;
+        } else if (field.type == "bool") {
+            if (data == undefined || data === "")
+                data = false;
 
-            if(typeof data =="boolean"){
+            if (typeof data == "boolean") {
                 return data
-            }else if(String(data).toLowerCase()=="false" || String(data)=="0"){
+            } else if (String(data).toLowerCase() == "false" || String(data) == "0") {
                 return false;
-            }else if(String(data).toLowerCase()=="true" || String(data)=="1"){
+            } else if (String(data).toLowerCase() == "true" || String(data) == "1") {
                 return true;
-            }else{
+            } else {
                 return Boolean(data);
             }
-        }else if(field.type=="bool[]"){
-            if(data==undefined || data=="" || data=="[]")
-                data=null;
+        } else if (field.type == "bool[]") {
+            if (data == undefined || data == "" || data == "[]")
+                data = null;
 
-            if(typeof data=="boolean"){
+            if (typeof data == "boolean") {
                 return [data];
-            }else if(typeof data=="string"){
-                data=data.replace(/\[|\]/g,"");
-                let list=data.split(/,|;/)
-                let result=[]
-                for(let i=0;i<list.length;i++){
-                    let v=list[i]
-                    if(v.toLowerCase()=="false" || v=="0"){
+            } else if (typeof data == "string") {
+                data = data.replace(/\[|\]/g, "");
+                let list = data.split(/,|;/)
+                let result = []
+                for (let i = 0; i < list.length; i++) {
+                    let v = list[i]
+                    if (v.toLowerCase() == "false" || v == "0") {
                         result.push(false);
-                    }else if(v.toLowerCase()=="true" || v=="1"){
+                    } else if (v.toLowerCase() == "true" || v == "1") {
                         result.push(true);
-                    }else{
+                    } else {
                         result.push(Boolean(data))
                     }
                 }
                 return result;
-            }else{
+            } else {
                 return []
             }
-        }else if(field.type=="string"){
-            if(data==null){
+        } else if (field.type == "string") {
+            if (data == null) {
                 return ""
             }
             return String(data);
-        }else if(field.type=="string[]"){
-            if(data==null){
+        } else if (field.type == "string[]") {
+            if (data == null) {
                 data = ""
             }
-            if(data==undefined || data=="" || data=="[]")
-                data=null;
+            if (data == undefined || data == "" || data == "[]")
+                data = null;
 
-            if(typeof data=="string"){
+            if (typeof data == "string") {
                 //使用,,分割字符串
                 return data.split(/,,|;;/g);
-            }else if(typeof data=="number"){
+            } else if (typeof data == "number") {
                 return [data.toString()];
-            }else if(data==null){
+            } else if (data == null) {
                 return [];
-            }else{
+            } else {
                 console.error(chalk.red(`表${this.fullName} 行${lineNumber} 字段<${field.nameOrigin}> string[]类型值填写错误 ${data}`))
                 return []
             }
 
-        }else if(field.type=="string*"){
-            if(data==null){
+        } else if (field.type == "string*") {
+            if (data == null) {
                 return ""
             }
             return String(data);
-        }else if(field.type=="object"){
-            try{
-                let json=eval("(function(){return "+String(data)+"})()");
+        } else if (field.type == "object") {
+            try {
+                let json = eval("(function(){return " + String(data) + "})()");
                 return json;
-            }catch(e){
+            } catch (e) {
                 console.error(chalk.red(`表${this.fullName} 行${lineNumber} 字段<${field.nameOrigin}> object类型值填写错误 ${data}`))
                 return String(data)
             }
-        }else if(field.type=="object[]"){
-            try{
-                let json=eval("(function(){return "+String(data)+"})()");
-                if(json==null){
+        } else if (field.type == "object[]") {
+            try {
+                let json = eval("(function(){return " + String(data) + "})()");
+                if (json == null) {
                     return []
                 }
-                if(json instanceof Array==false){
+                if (json instanceof Array == false) {
                     return [json]
                 }
                 return json;
-            }catch(e){
+            } catch (e) {
                 console.error(chalk.red(`表${this.fullName} 行${lineNumber} 字段<${field.nameOrigin}> object[]类型值填写错误 ${data}`))
                 return []
             }
-        }else if(field.type=="fk"){
+        } else if (field.type == "fk") {
             if (data === null || data === undefined || data === "" || data == "undefined") {
                 data = -1;
             } else {
@@ -426,20 +426,20 @@ export class DataTable {
                 }
             }
             return data
-        }else if(field.type=="key"){
-            if(data==null){
+        } else if (field.type == "key") {
+            if (data == null) {
                 return ""
             }
             return String(data);
-        }else if(field.type=="fk[]"){
-            if(data==undefined || data==="" || data=="[]")
-                data=null;
-            if(typeof data=="number"){
+        } else if (field.type == "fk[]") {
+            if (data == undefined || data === "" || data == "[]")
+                data = null;
+            if (typeof data == "number") {
                 return [data];
-            }else if(typeof data=="string"){
-                data=data.replace(/\[|\]/g,"");
-                let list=data.split(/,|;/)
-                let result=[]
+            } else if (typeof data == "string") {
+                data = data.replace(/\[|\]/g, "");
+                let list = data.split(/,|;/)
+                let result = []
                 for (let i = 0; i < list.length; i++) {
                     let v: any
                     // if (isNaN(list[i])) {
@@ -456,7 +456,7 @@ export class DataTable {
                     result.push(v)
                 }
                 return result;
-            }else{
+            } else {
                 return [];
             }
         } else {
@@ -472,21 +472,21 @@ export class DataTable {
     /**
      * 获取所有的数据列表
      */
-    getDataList(){
-        let fieldList=this.fields;
-        if(!fieldList)
+    getDataList() {
+        let fieldList = this.fields;
+        if (!fieldList)
             return [];
 
-        let data=[];
-        for(let i=3;i<this.sheet.data.length;i++){
-            let line=[];
-            let lineData=this.sheet.data[i];
-            if(!lineData || lineData[0].value==null){
+        let data = [];
+        for (let i = 3; i < this.sheet.data.length; i++) {
+            let line = [];
+            let lineData = this.sheet.data[i];
+            if (!lineData || lineData[0].value == null) {
                 continue;
             }
-            for(let l=0;l<fieldList.length;l++){
-                let data=lineData[l]
-                let field=fieldList[l];
+            for (let l = 0; l < fieldList.length; l++) {
+                let data = lineData[l]
+                let field = fieldList[l];
                 if (field && field.skip == false) {
                     let v = this.getNewData(field, data && data.value, i + 1)
                     line.push(v);
@@ -509,16 +509,16 @@ export class DataTable {
     /**
      * 获取经过转换的对象
      */
-    getObjectList(){
-        let fieldList=this.fields;
-        if(!fieldList)
+    getObjectList() {
+        let fieldList = this.fields;
+        if (!fieldList)
             return [];
-        
-        fieldList = fieldList.filter(a => a.skip == false);
-        let dataList=this.getDataList();
 
-        let objList:any[]=[]
-        for(let data of dataList){
+        fieldList = fieldList.filter(a => a.skip == false);
+        let dataList = this.getDataList();
+
+        let objList: any[] = []
+        for (let data of dataList) {
             let obj: any = this.convDataToObject(data, fieldList)
             objList.push(obj);
         }
@@ -628,19 +628,19 @@ export class DataTable {
         }
     }
 
-    
+
     /** 
      * 检查表格格式是否错误
     */
-    checkError(){
-        let fieldList=this.fields;
-        let data=this.getDataList();
-        if(fieldList==null){
+    checkError() {
+        let fieldList = this.fields;
+        let data = this.getDataList();
+        if (fieldList == null) {
             return;
         }
-        fieldList=fieldList.filter(a=>a.skip==false)
+        fieldList = fieldList.filter(a => a.skip == false)
         //检查 uid 和 fk
-        for(let i=0;i<fieldList.length;i++){
+        for (let i = 0; i < fieldList.length; i++) {
             let field = fieldList[i];
 
             if (field.isUnique) {
@@ -657,7 +657,7 @@ export class DataTable {
             } else if (field.type == "fk") {
                 //外键检查
                 let fkTable = this.getTableByFK(field);
-                if(fkTable==null){
+                if (fkTable == null) {
                     console.error(chalk.red(`表${this.fullName} 字段<${field.nameOrigin}> 无法找到外键表EB ${field.fkTableNameOrigin}`))
                     continue;
                 }
@@ -667,18 +667,18 @@ export class DataTable {
                     continue;
                 }
                 let list = fkTable.getFieldValueList(field.fkFieldNameOrigin as string)
-                for(let j=0;j<data.length;j++){
-                    let line=data[j]
+                for (let j = 0; j < data.length; j++) {
+                    let line = data[j]
                     let v = toTypeValue(line[i], fkField.type);//找到相应的值
 
-                    if(v && v!=-1 && list.indexOf(v)==-1){//只有明确的值才检查
+                    if (v && v != -1 && list.indexOf(v) == -1) {//只有明确的值才检查
                         console.error(chalk.red(`表${this.fullName} 行${j + 4} 字段<${field.nameOrigin}> 无法找到外键值 ${v}`))
                     }
                 }
-            }else if(field.type=="fk[]"){
+            } else if (field.type == "fk[]") {
                 //外键数组
                 let fkTable = this.getTableByFK(field);
-                if(fkTable==null){
+                if (fkTable == null) {
                     console.error(chalk.red(`表${this.fullName} 字段<${field.nameOrigin}> 无法找到外键表[]EB ${field.fkTableNameOrigin}`))
                     continue;
                 }
@@ -689,7 +689,7 @@ export class DataTable {
                 }
                 let list = fkTable.getFieldValueList(field.fkFieldNameOrigin as string)
                 for (let j = 0; j < data.length; j++) {
-                    let line=data[j]
+                    let line = data[j]
                     let v = line[i];//找到相应的值
 
                     if (v) {
@@ -710,14 +710,14 @@ export class DataTable {
      * 获取指定字段的值列表
      * @param fieldName 字段名称 
      */
-    getFieldValueList(fieldName:string):any[]{
-        let result=[];
-        let data=this.getDataList();
-        let fieldList=this.fields!.filter(a=>a.skip==false)
-        for(let i=0;i<fieldList.length;i++){
+    getFieldValueList(fieldName: string): any[] {
+        let result = [];
+        let data = this.getDataList();
+        let fieldList = this.fields!.filter(a => a.skip == false)
+        for (let i = 0; i < fieldList.length; i++) {
             if (fieldList[i].nameOrigin == fieldName) {
-                for(let j=0;j<data.length;j++){
-                    let line=data[j]
+                for (let j = 0; j < data.length; j++) {
+                    let line = data[j]
                     result.push(line[i])
                 }
                 break;
