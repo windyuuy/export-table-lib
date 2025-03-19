@@ -145,6 +145,13 @@ export class DataTable {
             let fkFieldName: string | undefined
             let translate: boolean = false;
 
+            if (name == null || name == "") {
+                throw new Error(`字段名不能为空: 序号: ${i}`)
+            }
+            if (rawType == null || rawType == "") {
+                throw new Error(`字段类型不能为空, 字段名: ${name}`)
+            }
+
             if (type === "") {
                 let skip = new Field(name || des, des || name, "any", rawType);
                 skip.skip = true;

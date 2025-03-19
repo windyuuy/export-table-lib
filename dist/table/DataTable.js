@@ -140,6 +140,12 @@ class DataTable {
             let fkTableName;
             let fkFieldName;
             let translate = false;
+            if (name == null || name == "") {
+                throw new Error(`字段名不能为空: 序号: ${i}`);
+            }
+            if (rawType == null || rawType == "") {
+                throw new Error(`字段类型不能为空, 字段名: ${name}`);
+            }
             if (type === "") {
                 let skip = new Field_1.Field(name || des, des || name, "any", rawType);
                 skip.skip = true;
