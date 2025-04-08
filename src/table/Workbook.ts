@@ -129,14 +129,15 @@ export class Workbook {
                 for (let isheet = 0; isheet < data.length; isheet++) {
                     let sheetMetaData = data[isheet]
                     let sheetMeta = new SheetMeta(sheetMetaData)
-                    sheetMeta.workbookName = this.name
-                    sceneMeta.addSheetMeta(sheetMeta)
                     let sheet = this.getSheet(sheetMeta.name)
                     if (sheet == null) {
                         let tip = `invalid sheet name in meta: ${sheetMeta.name}`
                         console.error(chalk.red(tip))
-                        throw new Error(tip)
+                        // throw new Error(tip)
+                        continue
                     }
+                    sheetMeta.workbookName = this.name
+                    sceneMeta.addSheetMeta(sheetMeta)
                     sheetMeta.sheet = sheet
 
                     let fieldMetaDatas = sheetMetaData.filter(d => !d.startsWith("#"))

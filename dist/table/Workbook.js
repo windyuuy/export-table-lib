@@ -115,14 +115,15 @@ class Workbook {
                 for (let isheet = 0; isheet < data.length; isheet++) {
                     let sheetMetaData = data[isheet];
                     let sheetMeta = new SheetMeta_1.SheetMeta(sheetMetaData);
-                    sheetMeta.workbookName = this.name;
-                    sceneMeta.addSheetMeta(sheetMeta);
                     let sheet = this.getSheet(sheetMeta.name);
                     if (sheet == null) {
                         let tip = `invalid sheet name in meta: ${sheetMeta.name}`;
                         console.error(chalk_1.default.red(tip));
-                        throw new Error(tip);
+                        // throw new Error(tip)
+                        continue;
                     }
+                    sheetMeta.workbookName = this.name;
+                    sceneMeta.addSheetMeta(sheetMeta);
                     sheetMeta.sheet = sheet;
                     let fieldMetaDatas = sheetMetaData.filter(d => !d.startsWith("#"));
                     for (let ifield = 0; ifield < fieldMetaDatas.length; ifield++) {
