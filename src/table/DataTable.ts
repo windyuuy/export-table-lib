@@ -146,10 +146,10 @@ export class DataTable {
             let translate: boolean = false;
 
             if (name == null || name == "") {
-                throw new Error(`字段名不能为空: 序号: ${i}`)
+                throw new Error(`字段名不能为空: 序号: ${this.workbookName}.${this.name}.字段列表[${i}]`)
             }
             if (rawType == null || rawType == "") {
-                throw new Error(`字段类型不能为空, 字段名: ${name}`)
+                throw new Error(`字段类型不能为空, ${this.workbookName}.${this.name}.字段名: ${name}`)
             }
 
             if (type === "") {
