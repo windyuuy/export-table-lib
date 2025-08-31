@@ -155,8 +155,35 @@ export async function handler(argv: any) {
                 .filter(p => p.tags.indexOf(tag) >= 0 || tag == p.name)
 
             {
+                // 先批量导出
+                let tables = workbookManager.dataTables
+                let paras: HandleBatchParams = {
+                    workbookManager: workbookManager,
+                    tables,
+                    xxtea: encrypt,
+                    inject: injectMap,
+                    packagename: packagename,
+                    outPath: to,
+                    exportNamespace: exportNamespace,
+                    moreOptions,
+                    allTags: pscs,
+                }
+                console.log(`> handle batch begin`)
+                let t1 = Date.now();
+                matchedPlugins.forEach(plugin => {
+                    console.log(`>> - handle batch with [${plugin.name}]`)
+                    let t1_1 = Date.now();
+                    plugin.handleBatch(paras)
+                    let t2_1 = Date.now();
+                    console.log(`>> - handle batch with [${plugin.name}] done, timecost: ${t2_1 - t1_1}`)
+                })
+                let t2 = Date.now();
+                console.log(`> handle batch done, timecost: ${t2 - t1}`)
+            }
 
-                //导出每张表
+            {
+
+                // 导出每张表
                 console.log(`> handle sheets begin`)
                 let t1 = Date.now();
 
@@ -195,32 +222,6 @@ export async function handler(argv: any) {
                 }
                 let t2 = Date.now();
                 console.log(`> handle sheets done, timecost: ${t2 - t1}`)
-            }
-
-            {
-                let tables = workbookManager.dataTables
-                let paras: HandleBatchParams = {
-                    workbookManager: workbookManager,
-                    tables,
-                    xxtea: encrypt,
-                    inject: injectMap,
-                    packagename: packagename,
-                    outPath: to,
-                    exportNamespace: exportNamespace,
-                    moreOptions,
-                    allTags: pscs,
-                }
-                console.log(`> handle batch begin`)
-                let t1 = Date.now();
-                matchedPlugins.forEach(plugin => {
-                    console.log(`>> - handle batch with [${plugin.name}]`)
-                    let t1_1 = Date.now();
-                    plugin.handleBatch(paras)
-                    let t2_1 = Date.now();
-                    console.log(`>> - handle batch with [${plugin.name}] done, timecost: ${t2_1 - t1_1}`)
-                })
-                let t2 = Date.now();
-                console.log(`> handle batch done, timecost: ${t2 - t1}`)
             }
         }
     }
