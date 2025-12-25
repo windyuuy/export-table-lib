@@ -1,6 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.clearSpace = exports.makeFirstLetterLower = exports.makeFirstLetterUpper = exports.iff = exports.Cond = exports.foreach = exports.st = exports.cmm = exports.stdtemp = void 0;
+exports.Cond = void 0;
+exports.stdtemp = stdtemp;
+exports.cmm = cmm;
+exports.st = st;
+exports.foreach = foreach;
+exports.iff = iff;
+exports.makeFirstLetterUpper = makeFirstLetterUpper;
+exports.makeFirstLetterLower = makeFirstLetterLower;
+exports.clearSpace = clearSpace;
 /**
  * 标准模板文本
  * @param s
@@ -9,14 +17,12 @@ exports.clearSpace = exports.makeFirstLetterLower = exports.makeFirstLetterUpper
 function stdtemp(s) {
     return s;
 }
-exports.stdtemp = stdtemp;
 /**
  * 注释
  * @param a
  * @returns
  */
 function cmm(a) { return ""; }
-exports.cmm = cmm;
 /**
  * 表达式
  * @param f
@@ -25,7 +31,6 @@ exports.cmm = cmm;
 function st(f) {
     return f();
 }
-exports.st = st;
 /**
  * 遍历列表生成字符串
  * - 会自动去除头尾多余的换行符(LF)
@@ -48,7 +53,6 @@ function foreach(ls, f, sign = "\n", autoTrim = true) {
     }).filter(line => line != "").join(sign);
     return line;
 }
-exports.foreach = foreach;
 class Cond {
     lines = [];
     finished = false;
@@ -99,7 +103,6 @@ exports.Cond = Cond;
 function iff(cond, call) {
     return new Cond().iff(cond, call);
 }
-exports.iff = iff;
 /**
  * 首字母大写
  * @param str
@@ -108,7 +111,6 @@ exports.iff = iff;
 function makeFirstLetterUpper(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
-exports.makeFirstLetterUpper = makeFirstLetterUpper;
 /**
  * 首字母小写
  * @param str
@@ -117,9 +119,7 @@ exports.makeFirstLetterUpper = makeFirstLetterUpper;
 function makeFirstLetterLower(str) {
     return str.charAt(0).toLowerCase() + str.slice(1);
 }
-exports.makeFirstLetterLower = makeFirstLetterLower;
 function clearSpace(value) {
     return value.replace(/^(\r|\n|\t| )+$/gm, "");
 }
-exports.clearSpace = clearSpace;
 //# sourceMappingURL=Utils.js.map

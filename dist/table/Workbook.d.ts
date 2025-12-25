@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Sheet } from "./Sheet";
 import { WorkbookMeta } from "./meta/WorkbookMeta";
 import { WorkbookMetaManager } from "./meta/WorkbookMetaManager";

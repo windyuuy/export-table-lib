@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.launchWithCmdOptions = void 0;
+exports.launchWithCmdOptions = launchWithCmdOptions;
 const yargs = require("yargs");
 const exportCmd = require("./commands/export");
 const tokithelper_1 = require("./tokithelper");
@@ -22,5 +22,4 @@ async function launchWithCmdOptions() {
             .help("h").argv;
     }
 }
-exports.launchWithCmdOptions = launchWithCmdOptions;
 //# sourceMappingURL=Loader.js.map

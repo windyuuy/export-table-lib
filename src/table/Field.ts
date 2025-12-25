@@ -1,7 +1,7 @@
 import { DataTable } from "./DataTable";
 import { FieldExtendMode, FieldMeta } from "./meta/FieldMeta";
 
-export type FieldType = "any" | "uid" | "number" | "number[]" | "bool" | "bool[]" | "string" | "object" | "object[]" | "fk" | "string*" | "string[]" | "key" | "fk[]" | "int" | "int[]" | "long" | "long[]" | "float" | "float[]"
+export type FieldType = "any" | "uid" | "number" | "number[]" | "bool" | "bool[]" | "string" | "object" | "object[]" | "fk" | "trstr" | "string[]" | "trstr[]" | "key" | "fk[]" | "int" | "int[]" | "long" | "long[]" | "float" | "float[]"
 export const TypeList = ["any", "number", "number[]", "bool", "bool[]", "string", "string[]", "object", "object[]", "key", "int", "int[]", "long", "long[]", "float", "float[]"]
 
 

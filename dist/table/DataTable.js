@@ -27,7 +27,7 @@ const strictParseInt = (n) => {
 exports.strictParseInt = strictParseInt;
 const toTypeValue = (v, t) => {
     if (typeof (v) != t) {
-        if (t == "string" || t == "key" || t == "string*") {
+        if (t == "string" || t == "key" || t == "trstr") {
             return `${v}`;
         }
         else if (t == "number" || t == "float" || t == "uid") {
@@ -186,8 +186,12 @@ class DataTable {
                 fkFieldName = param[2];
                 type = "fk";
             }
-            else if (type == "string*") {
+            else if (type == "trstr") {
                 type = "string";
+                translate = true;
+            }
+            else if (type == "trstr[]") {
+                type = "string[]";
                 translate = true;
             }
             else if (type.substr(0, 3).toLowerCase() == "uid") {
@@ -366,13 +370,13 @@ class DataTable {
                 return [];
             }
         }
-        else if (field.type == "string") {
+        else if (field.type == "string" || field.type == "trstr") {
             if (data == null) {
                 return "";
             }
             return String(data);
         }
-        else if (field.type == "string[]") {
+        else if (field.type == "string[]" || field.type == "trstr[]") {
             if (data == null) {
                 data = "";
             }
@@ -392,12 +396,6 @@ class DataTable {
                 console.error(chalk_1.default.red(`表${this.fullName} 行${lineNumber} 字段<${field.nameOrigin}> string[]类型值填写错误 ${data}`));
                 return [];
             }
-        }
-        else if (field.type == "string*") {
-            if (data == null) {
-                return "";
-            }
-            return String(data);
         }
         else if (field.type == "object") {
             try {

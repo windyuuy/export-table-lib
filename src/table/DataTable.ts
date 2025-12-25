@@ -26,7 +26,7 @@ export const strictParseInt = (n: any) => {
 
 const toTypeValue = (v: any, t: FieldType) => {
     if (typeof (v) != t) {
-        if (t == "string" || t == "key" || t == "string*") {
+        if (t == "string" || t == "key" || t == "trstr") {
             return `${v}`
         } else if (t == "number" || t == "float" || t == "uid") {
             return parseFloat(v)
@@ -191,9 +191,12 @@ export class DataTable {
                 fkTableName = param[1]
                 fkFieldName = param[2]
                 type = "fk"
-            } else if (type == "string*") {
+            } else if (type == "trstr") {
                 type = "string"
                 translate = true;
+            } else if (type == "trstr[]") {
+                type = "string[]"
+                translate = true
             } else if (type.substr(0, 3).toLowerCase() == "uid") {
                 let param = type.split(/\s+/)
                 if (param.length < 2) {
@@ -359,12 +362,12 @@ export class DataTable {
             } else {
                 return []
             }
-        } else if (field.type == "string") {
+        } else if (field.type == "string" || field.type == "trstr") {
             if (data == null) {
                 return ""
             }
             return String(data);
-        } else if (field.type == "string[]") {
+        } else if (field.type == "string[]" || field.type == "trstr[]") {
             if (data == null) {
                 data = ""
             }
@@ -383,11 +386,6 @@ export class DataTable {
                 return []
             }
 
-        } else if (field.type == "string*") {
-            if (data == null) {
-                return ""
-            }
-            return String(data);
         } else if (field.type == "object") {
             try {
                 let json = eval("(function(){return " + String(data) + "})()");

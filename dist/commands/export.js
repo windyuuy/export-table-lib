@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = exports.builder = exports.describe = exports.command = void 0;
+exports.describe = exports.command = void 0;
+exports.builder = builder;
+exports.handler = handler;
 const WorkbookManager_1 = require("../table/WorkbookManager");
 const xxtea = require("xxtea-node");
 const pako = require("pako");
@@ -26,7 +28,6 @@ function builder(yargs) {
         .boolean("recursive").alias("r", "recursive")
         .help("h");
 }
-exports.builder = builder;
 function encrypt(str, key, deflate) {
     //先压缩再加密
     if (deflate) {
@@ -224,5 +225,4 @@ async function handler(argv) {
         runExport(undefined);
     }
 }
-exports.handler = handler;
 //# sourceMappingURL=export.js.map
