@@ -124,7 +124,7 @@ export async function handler(argv: any) {
             }
 
             let pluginName = ps[0]
-            let pluginFullName = "export-table-pulgin-" + pluginName
+            let pluginFullName = "export-table-plugin-" + pluginName
             type TPlugin = { ExportPlugins: IPlugin[] }
             let plugin: TPlugin | symbol = ImportFailed
             {
@@ -134,6 +134,19 @@ export async function handler(argv: any) {
                         if (plugin != ImportFailed) {
                             console.log(`using local plugin ${lib}/:${pluginFullName}`)
                             break
+                        }
+                    }
+
+                    if (plugin == ImportFailed) {
+                        // 兼容错误的拼写
+                        // TODO: 以后版本可以删除此兼容
+                        let pluginFullName2 = "export-table-pulgin-" + pluginName
+                        for (let lib of libs) {
+                            plugin = tryImport(join(lib, pluginFullName2), verbose)
+                            if (plugin != ImportFailed) {
+                                console.log(`using local plugin ${lib}/:${pluginFullName2}`)
+                                break
+                            }
                         }
                     }
                 }
@@ -146,7 +159,7 @@ export async function handler(argv: any) {
             }
             if (plugin == ImportFailed) {
                 console.error(chalk.red(`plugin not found: <${pluginName}>`))
-                console.error("请确认插件目录名是否以 export-table-pulgin-${PluginName} 的格式命名；或者如果插件未以npm_module形式安装，需要在传入参数中指定传参 --libs ${插件目录的上一级目录}。")
+                console.error("请确认插件目录名是否以 export-table-plugin-${PluginName} 的格式命名；或者如果插件未以npm_module形式安装，需要在传入参数中指定传参 --libs ${插件目录的上一级目录}。")
                 return;
             }
             let exportPlugins: IPlugin[] = (plugin as TPlugin).ExportPlugins
