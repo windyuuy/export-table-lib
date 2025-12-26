@@ -117,6 +117,7 @@ async function handler(argv) {
             }
             let pluginName = ps[0];
             let pluginFullName = "export-table-plugin-" + pluginName;
+            let pluginFullNameCompat = "export-table-pulgin-" + pluginName;
             let plugin = ImportFailed;
             {
                 if (libs.length > 0) {
@@ -130,11 +131,10 @@ async function handler(argv) {
                     if (plugin == ImportFailed) {
                         // 兼容错误的拼写
                         // TODO: 以后版本可以删除此兼容
-                        let pluginFullName2 = "export-table-pulgin-" + pluginName;
                         for (let lib of libs) {
-                            plugin = tryImport((0, path_1.join)(lib, pluginFullName2), verbose);
+                            plugin = tryImport((0, path_1.join)(lib, pluginFullNameCompat), verbose);
                             if (plugin != ImportFailed) {
-                                console.log(`using local plugin ${lib}/:${pluginFullName2}`);
+                                console.log(`using local plugin ${lib}/:${pluginFullNameCompat}`);
                                 break;
                             }
                         }
@@ -144,6 +144,12 @@ async function handler(argv) {
                     plugin = tryImport(pluginFullName, verbose);
                     if (plugin != ImportFailed) {
                         console.log(`using global plugin ${pluginFullName}`);
+                    }
+                }
+                if (plugin == ImportFailed) {
+                    plugin = tryImport(pluginFullNameCompat, verbose);
+                    if (plugin != ImportFailed) {
+                        console.log(`using global plugin ${pluginFullNameCompat}`);
                     }
                 }
             }

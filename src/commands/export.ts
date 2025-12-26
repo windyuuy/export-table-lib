@@ -125,6 +125,7 @@ export async function handler(argv: any) {
 
             let pluginName = ps[0]
             let pluginFullName = "export-table-plugin-" + pluginName
+            let pluginFullNameCompat = "export-table-pulgin-" + pluginName
             type TPlugin = { ExportPlugins: IPlugin[] }
             let plugin: TPlugin | symbol = ImportFailed
             {
@@ -140,11 +141,10 @@ export async function handler(argv: any) {
                     if (plugin == ImportFailed) {
                         // 兼容错误的拼写
                         // TODO: 以后版本可以删除此兼容
-                        let pluginFullName2 = "export-table-pulgin-" + pluginName
                         for (let lib of libs) {
-                            plugin = tryImport(join(lib, pluginFullName2), verbose)
+                            plugin = tryImport(join(lib, pluginFullNameCompat), verbose)
                             if (plugin != ImportFailed) {
-                                console.log(`using local plugin ${lib}/:${pluginFullName2}`)
+                                console.log(`using local plugin ${lib}/:${pluginFullNameCompat}`)
                                 break
                             }
                         }
@@ -154,6 +154,12 @@ export async function handler(argv: any) {
                     plugin = tryImport<TPlugin>(pluginFullName, verbose)
                     if (plugin != ImportFailed) {
                         console.log(`using global plugin ${pluginFullName}`)
+                    }
+                }
+                if (plugin == ImportFailed) {
+                    plugin = tryImport<TPlugin>(pluginFullNameCompat, verbose)
+                    if (plugin != ImportFailed) {
+                        console.log(`using global plugin ${pluginFullNameCompat}`)
                     }
                 }
             }
