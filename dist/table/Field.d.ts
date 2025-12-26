@@ -1,7 +1,12 @@
 import { DataTable } from "./DataTable";
 import { FieldMeta } from "./meta/FieldMeta";
-export type FieldType = "any" | "uid" | "number" | "number[]" | "bool" | "bool[]" | "string" | "object" | "object[]" | "fk" | "trstr" | "string[]" | "trstr[]" | "key" | "fk[]" | "int" | "int[]" | "long" | "long[]" | "float" | "float[]";
+export type FieldType = "any" | "uid" | "number" | "number[]" | "bool" | "bool[]" | "string" | "object" | "object[]" | "fk" | "trstr" | "string[]" | "trstr[]" | "key" | "fk[]" | "int" | "int[]" | "long" | "long[]" | "float" | "float[]" | "note";
 export declare const TypeList: string[];
+export declare enum NoteType {
+    None = 0,
+    Note = 1,
+    Comment = 2
+}
 export declare class Field {
     /**
      * 是否跳过该字段
@@ -64,6 +69,7 @@ export declare class Field {
     fkField?: Field;
     get fkFieldName(): string | undefined;
     translate: boolean;
+    note: NoteType;
     meta?: FieldMeta;
     constructor(name: string, describe: string, type: FieldType, rawType: string);
     get isFKField(): boolean;

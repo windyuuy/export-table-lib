@@ -27,7 +27,7 @@ const strictParseInt = (n) => {
 exports.strictParseInt = strictParseInt;
 const toTypeValue = (v, t) => {
     if (typeof (v) != t) {
-        if (t == "string" || t == "key" || t == "trstr") {
+        if (t == "string" || t == "key" || t == "trstr" || t == "note") {
             return `${v}`;
         }
         else if (t == "number" || t == "float" || t == "uid") {
@@ -140,6 +140,8 @@ class DataTable {
             let fkTableName;
             let fkFieldName;
             let translate = false;
+            let note = Field_1.NoteType.None;
+            // console.log(`解析字段: ${this.workbookName}.${this.name} 字段名: ${name} 类型: ${type}`)
             if (name == null || name == "") {
                 throw new Error(`字段名不能为空: 序号: ${this.workbookName}.${this.name}.字段列表[${i}]`);
             }
@@ -190,6 +192,10 @@ class DataTable {
                 type = "string";
                 translate = true;
             }
+            else if (type == "note") {
+                type = "string";
+                note = Field_1.NoteType.Note;
+            }
             else if (type == "trstr[]") {
                 type = "string[]";
                 translate = true;
@@ -226,6 +232,7 @@ class DataTable {
                 field.fkField = fkField;
             }
             field.translate = translate;
+            field.note = note;
             if (this.sheet.data[0][i].describe) {
                 field.describe += "\n" + this.sheet.data[0][i].describe; //添加备注
             }
@@ -370,7 +377,7 @@ class DataTable {
                 return [];
             }
         }
-        else if (field.type == "string" || field.type == "trstr") {
+        else if (field.type == "string" || field.type == "trstr" || field.type == "note") {
             if (data == null) {
                 return "";
             }

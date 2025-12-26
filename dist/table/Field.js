@@ -1,8 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Field = exports.TypeList = void 0;
+exports.Field = exports.NoteType = exports.TypeList = void 0;
 const FieldMeta_1 = require("./meta/FieldMeta");
 exports.TypeList = ["any", "number", "number[]", "bool", "bool[]", "string", "string[]", "object", "object[]", "key", "int", "int[]", "long", "long[]", "float", "float[]"];
+var NoteType;
+(function (NoteType) {
+    NoteType[NoteType["None"] = 0] = "None";
+    NoteType[NoteType["Note"] = 1] = "Note";
+    NoteType[NoteType["Comment"] = 2] = "Comment";
+})(NoteType || (exports.NoteType = NoteType = {}));
 class Field {
     /**
      * 是否跳过该字段
@@ -70,6 +76,8 @@ class Field {
     }
     //翻译
     translate = false;
+    // 注释
+    note = NoteType.None;
     meta;
     constructor(name, describe, type, rawType) {
         this.nameOrigin = name;

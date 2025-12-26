@@ -2,7 +2,7 @@ import { Sheet } from "./Sheet";
 import { WorkbookManager } from "./WorkbookManager";
 import chalk from "chalk";
 import { Cell } from "./Cell";
-import { Field, FieldType, TypeList } from "./Field";
+import { Field, FieldType, TypeList, NoteType } from "./Field";
 import { SheetExtendMode, SheetMeta } from "./meta/SheetMeta";
 
 /**
@@ -26,7 +26,7 @@ export const strictParseInt = (n: any) => {
 
 const toTypeValue = (v: any, t: FieldType) => {
     if (typeof (v) != t) {
-        if (t == "string" || t == "key" || t == "trstr") {
+        if (t == "string" || t == "key" || t == "trstr" || t == "note") {
             return `${v}`
         } else if (t == "number" || t == "float" || t == "uid") {
             return parseFloat(v)
@@ -144,6 +144,9 @@ export class DataTable {
             let fkTableName: string | undefined
             let fkFieldName: string | undefined
             let translate: boolean = false;
+            let note: NoteType = NoteType.None
+
+            // console.log(`解析字段: ${this.workbookName}.${this.name} 字段名: ${name} 类型: ${type}`)
 
             if (name == null || name == "") {
                 throw new Error(`字段名不能为空: 序号: ${this.workbookName}.${this.name}.字段列表[${i}]`)
@@ -194,6 +197,9 @@ export class DataTable {
             } else if (type == "trstr") {
                 type = "string"
                 translate = true;
+            } else if (type == "note") {
+                type = "string"
+                note = NoteType.Note;
             } else if (type == "trstr[]") {
                 type = "string[]"
                 translate = true
@@ -227,6 +233,7 @@ export class DataTable {
                 field.fkField = fkField
             }
             field.translate = translate;
+            field.note = note;
             if (this.sheet.data[0][i].describe) {
                 field.describe += "\n" + this.sheet.data[0][i].describe //添加备注
             }
@@ -362,7 +369,7 @@ export class DataTable {
             } else {
                 return []
             }
-        } else if (field.type == "string" || field.type == "trstr") {
+        } else if (field.type == "string" || field.type == "trstr" || field.type == "note") {
             if (data == null) {
                 return ""
             }
