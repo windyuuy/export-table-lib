@@ -16,6 +16,7 @@ export function builder(yargs: typeof import("yargs")) {
     return yargs
         .string("from")
         .string("to")
+        .array("froms").describe("froms", "多个输入路径，配合场景使用")
         .string("namespace").describe("namespace", "命名空间").default("namespace", "MyGame.ExportedConfigs")
         .array("tagoutpaths").describe("tagoutpaths", "各tag对应路径")
         .array("tags").alias("t", "tags").describe("tag", "导出单张表格的模板")
@@ -56,6 +57,7 @@ function tryImport<T>(str: string, verbose: boolean): T | symbol {
 
 export async function handler(argv: any) {
     let from: string = argv.from;
+    let froms: string[] = argv.froms ?? [];
     let toRoot: string = argv.to;
     let tags: string[] | undefined = argv.tags;
     let tagoutpaths: string[] | undefined = argv.tagoutpaths;
@@ -68,6 +70,9 @@ export async function handler(argv: any) {
     let recursive: boolean = argv.recursive ?? false
     let moreOptions = argv.moreOptions ?? process.argv
     let exportNamespace = argv.namespace
+    if (from != "?") {
+        froms.push(from)
+    }
 
     let injectMap: { [key: string]: boolean } = {}
     for (let k of inject) {
@@ -79,7 +84,7 @@ export async function handler(argv: any) {
     // 暂时只需要支持一个
     workbookManager.meta.scenes = scenes.concat()
     let tLoad1 = Date.now();
-    await workbookManager.build(from, recursive);//加载所有表
+    await workbookManager.build(froms, recursive);//加载所有表
     let tLoad2 = Date.now();
     console.log(`load workbook timecost: ${tLoad2 - tLoad1}`)
 

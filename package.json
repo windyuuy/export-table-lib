@@ -1,6 +1,6 @@
 {
     "name": "export-table-lib",
-    "version": "1.0.74",
+    "version": "1.0.85",
     "description": "export-table-lib",
     "main": "dist/index.js",
     "files": [
@@ -8,8 +8,7 @@
         "dist/**/*.d.ts",
         "dist/index.js"
     ],
-    "scripts": {
-    },
+    "scripts": {},
     "repository": {
         "type": "git",
         "url": "https://github.com/windyuuy/export-table-lib.git"
@@ -20,6 +19,7 @@
         "buffer-from": "^1.1.1",
         "chalk": "^2.4.2",
         "fs-extra": "^8.0.1",
+        "glob": "^13.0.6",
         "pako": "^1.0.10",
         "typescript": "^3.9.5",
         "xlsx-color": "^0.14.30",

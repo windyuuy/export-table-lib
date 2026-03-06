@@ -15,6 +15,7 @@ function builder(yargs) {
     return yargs
         .string("from")
         .string("to")
+        .array("froms").describe("froms", "多个输入路径，配合场景使用")
         .string("namespace").describe("namespace", "命名空间").default("namespace", "MyGame.ExportedConfigs")
         .array("tagoutpaths").describe("tagoutpaths", "各tag对应路径")
         .array("tags").alias("t", "tags").describe("tag", "导出单张表格的模板")
@@ -54,6 +55,7 @@ function tryImport(str, verbose) {
 }
 async function handler(argv) {
     let from = argv.from;
+    let froms = argv.froms ?? [];
     let toRoot = argv.to;
     let tags = argv.tags;
     let tagoutpaths = argv.tagoutpaths;
@@ -66,6 +68,9 @@ async function handler(argv) {
     let recursive = argv.recursive ?? false;
     let moreOptions = argv.moreOptions ?? process.argv;
     let exportNamespace = argv.namespace;
+    if (from != "?") {
+        froms.push(from);
+    }
     let injectMap = {};
     for (let k of inject) {
         injectMap[k] = true;
@@ -75,7 +80,7 @@ async function handler(argv) {
     // 暂时只需要支持一个
     workbookManager.meta.scenes = scenes.concat();
     let tLoad1 = Date.now();
-    await workbookManager.build(from, recursive); //加载所有表
+    await workbookManager.build(froms, recursive); //加载所有表
     let tLoad2 = Date.now();
     console.log(`load workbook timecost: ${tLoad2 - tLoad1}`);
     const getToRoot = (toRoot, scene, needInjectSceneFolder) => {

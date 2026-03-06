@@ -5,6 +5,8 @@ export declare function builder(yargs: typeof import("yargs")): import("yargs").
 } & {
     to: string | undefined;
 } & {
+    froms: (string | number)[] | undefined;
+} & {
     namespace: string | undefined;
 }, "namespace"> & {
     namespace: string;
