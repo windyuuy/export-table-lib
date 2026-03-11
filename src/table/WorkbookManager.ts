@@ -30,22 +30,22 @@ export class WorkbookManager {
 
     async build(buildPaths: string[], recursive: boolean = false) {
         // 先遍历 buildPaths, 每个 Item 命名 `buildPath`, 按照是否 `recursive` 决定是否递归遍历, 遍历时按照以下规则处理, 获取文件列表, 并对文件列表去重, 得到最终的文件列表 `validFileList`:
-        // - 1. 如果 `buildPath` 以 `g/` 开头, 那么是 glob 表达式, 按照 glob 获取文件列表(使用 `glob` 包), 例如 `g/**/*.xlsx` 表示在当前目录及子目录下搜索所有以 `.xlsx` 结尾的文件
-        // - 2. 如果 `buildPath` 以 `r/` 开头, 那么是正则表达式, 按照正则获取文件列表:
-        //  - 表达式格式为 `r/<dir>?/<regex>/`，其中 `<dir>` 是要搜索的目录或文件路径，`/<regex>` 是要匹配的正则表达式(行文格式同nodejs正则表达式), 例如 `r/.?/^.*\.xlsx$/` 表示在当前目录下搜索所有以 `.xlsx` 结尾的文件
+        // - 1. 如果 `buildPath` 以 `g?` 开头, 那么是 glob 表达式, 按照 glob 获取文件列表(使用 `glob` 包), 例如 `g?**/*.xlsx` 表示在当前目录及子目录下搜索所有以 `.xlsx` 结尾的文件
+        // - 2. 如果 `buildPath` 以 `r?` 开头, 那么是正则表达式, 按照正则获取文件列表:
+        //  - 表达式格式为 `r?<dir>?/<regex>/`，其中 `<dir>` 是要搜索的目录或文件路径，`/<regex>` 是要匹配的正则表达式(行文格式同nodejs正则表达式), 例如 `r?./?/^.*\.xlsx$/` 表示在当前目录下搜索所有以 `.xlsx` 结尾的文件
         // - 3. 否则就是普通路径, 先判断路径是文件还是目录, 再按照以下规则处理:
         //  - 以如果是文件则直接构建
         //  - 如果是目录则遍历其中的文件, 并按照 `recursive` 参数确定是否继续遍历其中的子目录
         // 再遍历 `validFileList`, 对每个文件路径调用 `buildFile` 进行构建, 加入 `buildPromiseList` 中, 最后 `await Promise.all(buildPromiseList)` 等待所有构建完成
         let validFileList: string[] = []
         for (let buildPath of buildPaths) {
-            if (buildPath.startsWith("g/")) {
+            if (buildPath.startsWith("g?")) {
                 let glob = require("glob")
                 let pattern = buildPath.substring(2)
                 let files = glob.sync(pattern, { nodir: true })
                 validFileList.push(...files)
-            } else if (buildPath.startsWith("r/")) {
-                let match = buildPath.match(/^r\/(.*)\?\/(.+)\/$/)
+            } else if (buildPath.startsWith("r?")) {
+                let match = buildPath.match(/^r\?(.*)\?\/(.+)\/$/)
                 if (!match) {
                     console.error(chalk.red(`invalid regex pattern: ${buildPath}`))
                     continue
